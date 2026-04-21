@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUZ Foods — Premium Wholesale Snacks · South Africa</title>
+<link rel="stylesheet" href="shared.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<style>
+/* ─── HERO ─── */
+#hero { position:relative; width:100%; height:100vh; display:flex; align-items:center; overflow:hidden; }
+#hero-canvas { position:absolute; inset:0; width:100%; height:100%; }
+.hero-overlay {
+position:absolute; inset:0;
+background: radial-gradient(ellipse at 20% 50%, rgba(255,159,28,.15) 0%, transparent 55%),
+radial-gradient(ellipse at 80% 20%, rgba(46,196,182,.1) 0%, transparent 50%),
+radial-gradient(ellipse at 50% 100%, rgba(255,107,53,.05) 0%, transparent 50%),
+linear-gradient(to right, rgba(10,12,20,.95) 30%, rgba(10,12,20,.2) 100%);
+}
+#hero::before {
+content: '🍿 🍟 🥨 🧀 🍪 🥜 🌽';
+position: absolute;
+top: 5%;
+left: -5%;
+font-size: 2.5rem;
+opacity: 0.06;
+animation: floatSnacks 12s ease-in-out infinite;
+white-space: nowrap;
+letter-spacing: 3rem;
+z-index: 1;
+}
+#hero::after {
+content: '✨ 🌟 💫 ⭐ 🎉 🎊';
+position: absolute;
+bottom: 20%;
+right: -5%;
+font-size: 2rem;
+opacity: 0.05;
+animation: floatSnacks 15s ease-in-out infinite reverse;
+white-space: nowrap;
+letter-spacing: 4rem;
+z-index: 1;
+}
+.hero-content { position:relative; z-index:2; padding:0 3rem; max-width:860px; }
+.hero-eyebrow {
+display:inline-flex; align-items:center; gap:.75rem;
+font-size:.75rem; letter-spacing:.2em; text-transform:uppercase;
+color:var(--orange); margin-bottom:1.6rem;
+opacity:0; animation:bounceIn .8s .6s cubic-bezier(.34,1.56,.64,1) forwards;
+background: linear-gradient(135deg, rgba(255,159,28,0.15), rgba(255,230,109,0.08));
+padding: 0.55rem 1.2rem;
+border-radius: 999px;
+border: 1.5px solid rgba(255,159,28,0.35);
+font-weight: 700;
+}
+.hero-eyebrow::before { content:'🍿'; font-size: 1.1rem; }
+.hero-eyebrow::after { content:'🔥'; font-size: 0.9rem; margin-left: 0.3rem; }
+.hero-h1 {
+font-family:'Paytone One',sans-serif;
+font-size:clamp(4rem,10vw,9rem); line-height:.88; letter-spacing:-.02em;
+opacity:0; animation:fadeUp 1s 1s forwards;
+text-shadow: 0 0 80px rgba(255,159,28,0.25), 0 0 140px rgba(255,230,109,0.1);
+}
+.hero-h1 .c-orange {
+color:var(--orange);
+background: linear-gradient(135deg, var(--orange), var(--yellow));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+animation: shimmer 4s linear infinite;
+background-size: 200% auto;
+}
+.hero-h1 .c-teal { color:var(--teal); }
+.hero-h1 .c-yellow { color:var(--yellow); }
+.hero-sub { margin-top:2rem; font-size:1.05rem; color:var(--muted); line-height:1.75; max-width:480px; opacity:0; animation:fadeUp .9s 1.2s forwards; }
+.hero-actions { margin-top:2.8rem; display:flex; gap:1rem; flex-wrap:wrap; opacity:0; animation:fadeUp .9s 1.4s forwards; }
+.hero-scroll { position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:.6rem; opacity:0; animation:fadeIn 1s 2s forwards; }
+.hero-scroll span { font-size:.62rem; letter-spacing:.22em; color:var(--muted); text-transform:uppercase; font-weight:700; }
+.scroll-line { width:2px; height:52px; background:linear-gradient(to bottom,var(--orange),transparent); border-radius:2px; animation:scrollPulse 2.2s ease-in-out infinite; }
+
+/* Decorative blobs */
+.hero-blob {
+  position:absolute; border-radius:50%; filter:blur(70px); pointer-events:none; z-index:0;
+}
+.hero-blob-1 { width:500px; height:500px; background:rgba(255,159,28,0.08); top:-100px; right:-100px; }
+.hero-blob-2 { width:400px; height:400px; background:rgba(46,196,182,0.06); bottom:0; right:30%; animation:float 10s ease-in-out infinite; }
+.hero-blob-3 { width:300px; height:300px; background:rgba(230,57,70,0.05); top:30%; left:50%; animation:float 14s ease-in-out infinite reverse; }
+
+/* ─── BRANDS STRIP ─── */
+.brands-strip { padding:2.5rem 3rem; background:var(--surface); border-bottom:1px solid var(--border); }
+.brands-strip-label { font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); text-align:center; margin-bottom:2rem; }
+.brands-logos { display:flex; gap:2rem; justify-content:center; align-items:center; flex-wrap:wrap; }
+.brand-logo-pill {
+background:var(--surface2); border:1px solid var(--border);
+border-radius:12px; padding:.8rem 1.8rem;
+font-family:'Bebas Neue',sans-serif; font-size:1.05rem; letter-spacing:.08em;
+color:var(--muted); transition:all .4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor:default;
+position: relative;
+overflow: hidden;
+}
+.brand-logo-pill:hover {
+border-color:var(--orange);
+color:var(--white);
+transform:translateY(-5px) scale(1.05);
+box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px rgba(255,159,28,0.1);
+}
+.brand-logo-pill.teal:hover { border-color:var(--teal); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px var(--glow-teal); }
+.brand-logo-pill.red:hover { border-color:var(--red); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px var(--glow-red); }
+.brand-logo-pill.yellow:hover { border-color:var(--yellow); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 30px var(--glow-yellow); }
+.brand-logo-pill::before {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+transition: left 0.5s;
+}
+.brand-logo-pill:hover::before {
+left: 100%;
+}
+
+/* ─── ABOUT ─── */
+#about { display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:center; }
+.about-canvas-wrap { aspect-ratio:4/5; border:1px solid var(--border); border-radius:8px; background:var(--surface); overflow:hidden; position:relative; }
+#about-canvas { width:100%; height:100%; display:block; }
+.about-badge {
+  position:absolute; bottom:-1.5rem; right:-1.5rem;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:#000; width:120px; height:120px; border-radius:50%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-family:'Paytone One',sans-serif; animation:float 4s ease-in-out infinite;
+  box-shadow:0 0 50px var(--glow-orange), 0 6px 0 rgba(150,80,0,0.4);
+  border: 3px solid rgba(255,255,255,0.25);
+}
+.about-badge .num { font-size:2.6rem; line-height:1; }
+.about-badge .lbl { font-size:.65rem; letter-spacing:.08em; font-weight: 700; }
+.about-text h2 { margin-bottom:1.5rem; }
+.about-text p { color:var(--muted); line-height:1.82; margin-bottom:1.2rem; font-size:.98rem; }
+.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:2.5rem; padding-top:2.5rem; border-top:2px dashed rgba(255,159,28,0.2); }
+.stat-num { font-family:'Paytone One',sans-serif; font-size:3.2rem; line-height:1; color:var(--orange); }
+.stat-lbl { font-size:.75rem; color:var(--muted); margin-top:.3rem; font-weight:600; }
+
+/* ─── PRODUCTS ─── */
+#products { background:var(--surface); }
+.products-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:4rem; flex-wrap:wrap; gap:1.5rem; }
+.products-header p { color:var(--muted); max-width:300px; font-size:.93rem; line-height:1.65; }
+.products-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+
+/* Product card */
+.product-card {
+position:relative; border-radius:22px; overflow:hidden; cursor:pointer;
+transition:all .4s cubic-bezier(.34,1.56,.64,1);
+border:2.5px solid rgba(255,255,255,0.1);
+background: linear-gradient(145deg, var(--surface), var(--surface2));
+}
+.product-card:hover {
+transform:translateY(-14px) scale(1.02) rotate(0.5deg);
+box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 50px rgba(255,159,28,0.12);
+border-color: var(--orange);
+}
+.product-card:hover .product-brand-name {
+animation: wiggle 0.4s ease;
+}
+.product-card-inner { background:var(--bg); height:100%; display:flex; flex-direction:column; border-radius:22px; overflow:hidden; }
+.product-visual { height:220px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+.product-visual canvas { position:absolute; inset:0; width:100%!important; height:100%!important; }
+.product-visual-bg { position:absolute; inset:0; opacity:.12; }
+.product-badge { position:absolute; top:1rem; left:1rem; font-size:.65rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; padding:.35rem .85rem; border-radius:999px; box-shadow: 0 3px 10px rgba(0,0,0,0.3); }
+.product-body { padding:1.5rem; flex:1; display:flex; flex-direction:column; }
+.product-brand-name { font-family:'Paytone One',sans-serif; font-size:1.7rem; letter-spacing:-.01em; margin-bottom:.3rem; display:inline-block; }
+.product-tagline { font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; margin-bottom:.75rem; font-weight:600; }
+.product-desc { font-size:.86rem; color:var(--muted); line-height:1.62; flex:1; margin-bottom:1.2rem; }
+.product-flavours { display:flex; gap:.4rem; flex-wrap:wrap; }
+.flavour-chip { font-size:.68rem; padding:.28rem .7rem; background:rgba(255,255,255,.06); border:1.5px solid rgba(255,255,255,0.12); border-radius:999px; color:var(--muted); font-weight:600; transition: all .2s; }
+.flavour-chip:hover { color: var(--orange); border-color: var(--orange); transform: scale(1.05); }
+.product-card-footer { padding:1rem 1.5rem; border-top:1.5px dashed rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; }
+.product-card-footer span { font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+.product-link { font-size:.8rem; font-weight:800; text-decoration:none; display:flex; align-items:center; gap:.3rem; transition:gap .2s, transform .2s; }
+.product-link:hover { gap:.6rem; transform: translateX(3px); }
+
+/* ─── TESTIMONIALS ─── */
+#testimonials { position:relative; overflow:hidden; }
+#testimonials::before { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:700px; height:700px; border-radius:50%; background:radial-gradient(circle,rgba(255,159,28,.05) 0%,transparent 70%); pointer-events:none; }
+.testi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:4rem; }
+.testi-card {
+  background:var(--surface); border:2px solid rgba(255,255,255,0.08); border-radius:22px; padding:2rem;
+  transition:border-color .3s, transform .3s, box-shadow .3s;
+  position:relative; overflow:hidden;
+}
+.testi-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:4px;
+  background: linear-gradient(90deg, var(--orange), var(--yellow));
+}
+.testi-card:nth-child(2)::before { background: linear-gradient(90deg, var(--teal), var(--sky)); }
+.testi-card:nth-child(3)::before { background: linear-gradient(90deg, var(--red), var(--pink)); }
+.testi-card:hover { border-color:var(--orange); transform:translateY(-8px) rotate(-0.5deg); box-shadow: 0 20px 50px rgba(0,0,0,0.3), 0 0 30px rgba(255,159,28,0.1); }
+.testi-stars { font-size:1.1rem; margin-bottom:1rem; letter-spacing:.2em; }
+.testi-text { font-size:.92rem; color:var(--muted); line-height:1.75; margin-bottom:1.5rem; }
+.testi-author { display:flex; align-items:center; gap:.9rem; }
+.testi-avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--orange),var(--teal)); display:flex; align-items:center; justify-content:center; font-family:'Paytone One',sans-serif; font-size:1rem; color:#fff; flex-shrink:0; border: 2px solid rgba(255,255,255,0.2); }
+.testi-name { font-weight:700; font-size:.9rem; }
+.testi-biz { font-size:.75rem; color:var(--muted); }
+
+/* ─── GALLERY ─── */
+#gallery { background:var(--surface); }
+.gallery-grid { display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:220px; gap:1rem; margin-top:3rem; }
+.gallery-item {
+  background:var(--surface2); border:2px solid rgba(255,255,255,0.08); border-radius:20px;
+  overflow:hidden; cursor:pointer; position:relative;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s, border-color .3s;
+}
+.gallery-item:hover { transform:scale(1.03) rotate(0.5deg); box-shadow:0 16px 50px rgba(0,0,0,.5), 0 0 30px rgba(255,159,28,0.1); z-index:2; border-color: rgba(255,159,28,0.4); }
+.gallery-item:nth-child(1) { grid-column:span 2; grid-row:span 2; }
+.gallery-item:nth-child(4) { grid-column:span 2; }
+.gallery-canvas { width:100%; height:100%; display:block; }
+.gallery-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(7,9,15,.9) 0%,transparent 55%); display:flex; align-items:flex-end; padding:1.4rem; opacity:0; transition:opacity .3s; }
+.gallery-item:hover .gallery-overlay { opacity:1; }
+.gallery-label { font-family:'Paytone One',sans-serif; font-size:1.2rem; }
+
+/* ─── NEWS ─── */
+#news { }
+.news-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:4rem; }
+.news-card { background:var(--surface); border:2px solid rgba(255,255,255,0.08); border-radius:22px; overflow:hidden; transition:border-color .3s, transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .3s; cursor:pointer; }
+.news-card:hover { border-color:var(--orange); transform:translateY(-8px) rotate(0.5deg); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+.news-visual { height:180px; display:flex; align-items:center; justify-content:center; font-family:'Paytone One',sans-serif; font-size:3rem; letter-spacing:.02em; position:relative; overflow:hidden; }
+.news-body { padding:1.5rem; }
+.news-meta { display:flex; align-items:center; gap:.75rem; margin-bottom:.8rem; }
+.news-cat { font-size:.65rem; letter-spacing:.16em; text-transform:uppercase; color:var(--orange); font-weight:800; background: rgba(255,159,28,0.12); padding: .25rem .7rem; border-radius:999px; border: 1px solid rgba(255,159,28,0.25); }
+.news-date { font-size:.72rem; color:var(--muted); }
+.news-title { font-family:'Paytone One',sans-serif; font-size:1.4rem; margin-bottom:.6rem; line-height:1.1; }
+.news-excerpt { font-size:.85rem; color:var(--muted); line-height:1.65; margin-bottom:1.2rem; }
+.news-read { font-size:.8rem; font-weight:800; color:var(--orange); display:inline-flex; align-items:center; gap:.4rem; transition:gap .2s, transform .2s; text-decoration:none; background: rgba(255,159,28,0.1); padding:.4rem 1rem; border-radius:999px; border: 1.5px solid rgba(255,159,28,0.25); }
+.news-read:hover { gap:.7rem; transform: translateX(3px); }
+.news-read::after { content:'→'; }
+
+/* ─── FEATURES ─── */
+#features { background:var(--surface); border-top:1px solid var(--border); }
+.features-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; margin-top:4rem; }
+.feature-item { padding:2.2rem 1.8rem; border:2px solid rgba(255,255,255,0.08); border-radius:22px; transition:border-color .3s, background .3s, transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .3s; }
+.feature-item:hover { border-color:var(--orange); background:rgba(255,159,28,.05); transform:translateY(-6px) rotate(-1deg); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+.feature-icon { font-size:2rem; margin-bottom:1.3rem; display:flex; width:56px; height:56px; background: linear-gradient(135deg, rgba(255,159,28,0.15), rgba(255,230,109,0.08)); border-radius:16px; align-items:center; justify-content:center; border: 1.5px solid rgba(255,159,28,0.2); }
+.feature-title { font-family:'Paytone One',sans-serif; font-size:1.2rem; margin-bottom:.6rem; }
+.feature-desc { font-size:.86rem; color:var(--muted); line-height:1.65; }
+
+/* ─── CTA BAND ─── */
+#cta-band {
+  padding:7rem 3rem; text-align:center; position:relative; overflow:hidden;
+  background: linear-gradient(135deg, rgba(255,159,28,.1) 0%, rgba(255,230,109,.06) 40%, rgba(46,196,182,.06) 100%);
+  border-top:2px dashed rgba(255,159,28,0.2); border-bottom:2px dashed rgba(255,159,28,0.2);
+}
+#cta-band::before { content:'🔥'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:22vw; opacity:.03; pointer-events:none; white-space:nowrap; user-select:none; }
+#cta-band h2 { font-size:clamp(2.5rem,5vw,4rem); margin-bottom:1.2rem; }
+#cta-band p { color:var(--muted); font-size:1rem; margin:0 auto 2.5rem; max-width:460px; line-height:1.7; }
+.cta-actions { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+
+/* ─── CONTACT ─── */
+#contact { background:var(--surface); display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:start; }
+.contact-info h2 { margin-bottom:1.2rem; }
+.contact-info > p { color:var(--muted); line-height:1.75; margin-bottom:2.5rem; font-size:.95rem; }
+.contact-detail { display:flex; gap:1rem; align-items:flex-start; margin-bottom:1.5rem; }
+.cd-icon { width:44px; height:44px; flex-shrink:0; background:linear-gradient(135deg,rgba(255,159,28,.15),rgba(255,230,109,.08)); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:.95rem; border: 1.5px solid rgba(255,159,28,0.2); }
+.cd-text strong { display:block; font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; color:var(--orange); margin-bottom:.25rem; font-weight:800; }
+.cd-text span, .cd-text a { color:var(--muted); font-size:.9rem; text-decoration:none; }
+.cd-text a:hover { color:var(--orange); }
+.contact-form { display:flex; flex-direction:column; gap:1rem; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.form-group { display:flex; flex-direction:column; gap:.4rem; }
+.form-group label { font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+.form-group input, .form-group textarea, .form-group select {
+  background:var(--bg); border:2px solid rgba(255,255,255,0.1); color:var(--white);
+  padding:.9rem 1.1rem; border-radius:14px; font-family:'DM Sans',sans-serif; font-size:.9rem; outline:none; transition:border-color .2s, box-shadow .2s;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color:var(--orange); box-shadow: 0 0 0 3px rgba(255,159,28,0.1); }
+.form-group textarea { resize:vertical; min-height:120px; }
+.form-group select option { background:#0d1120; }
+.submit-btn {
+  background: linear-gradient(135deg, var(--orange), var(--orange2)); color:#fff; border:none; padding:1.1rem 2.8rem;
+  font-family:'DM Sans',sans-serif; font-weight:800; font-size:.84rem;
+  letter-spacing:.1em; text-transform:uppercase; cursor:pointer; border-radius:var(--radius-btn);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s; align-self:flex-start;
+  box-shadow:0 4px 25px var(--glow-orange), 0 4px 0 rgba(150,50,0,0.4);
+}
+.submit-btn:hover { transform:translateY(-3px) scale(1.03); box-shadow:0 10px 40px rgba(255,159,28,.5); }
+#form-success { display:none; color:var(--orange); font-size:.85rem; padding:.6rem 0; font-weight:700; }
+
+@media (max-width:900px) {
+  #about { grid-template-columns:1fr; }
+  .about-visual { display:none; }
+  .products-grid { grid-template-columns:1fr 1fr; }
+  .testi-grid { grid-template-columns:1fr; }
+  .gallery-grid { grid-template-columns:1fr 1fr; }
+  .gallery-item:nth-child(1) { grid-column:span 2; grid-row:span 1; }
+  .gallery-item:nth-child(4) { grid-column:span 1; }
+  .news-grid { grid-template-columns:1fr; }
+  .features-grid { grid-template-columns:1fr 1fr; }
+  #contact { grid-template-columns:1fr; gap:3rem; }
+  .form-row { grid-template-columns:1fr; }
+  .products-header { flex-direction:column; align-items:flex-start; }
+}
+@media (max-width:600px) {
+  .products-grid { grid-template-columns:1fr; }
+  .features-grid { grid-template-columns:1fr; }
+  .stats-row { grid-template-columns:1fr 1fr; }
+  .gallery-grid { grid-template-columns:1fr; }
+  .gallery-item:nth-child(1) { grid-column:span 1; }
+  .gallery-item:nth-child(4) { grid-column:span 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader">
+  <img src="uploads/logo-1776757362469.png" alt="SUZ Foods">
+  <div class="pre-bar-wrap"><div class="pre-bar"></div></div>
+  <div class="pre-tag">Premium Wholesale Snacks · South Africa</div>
+</div>
+
+<!-- CURSOR -->
+<div id="cursor"></div><div id="cursor-ring"></div><div id="cursor-glow"></div>
+
+<!-- WHATSAPP -->
+<a class="wa-float" href="https://wa.me/27817153423" target="_blank" title="WhatsApp Us">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="index.html"><img src="uploads/logo-1776757362469.png" alt="SUZ Foods"></a>
+  <ul class="nav-links">
+    <li><a href="#about" class="active">About</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="about.html">Our Story</a></li>
+    <li><a href="wholesale.html">Wholesale</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="wholesale.html">Order Wholesale</a>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="products.html" onclick="closeMobile()">Products</a>
+  <a href="about.html" onclick="closeMobile()">Our Story</a>
+  <a href="wholesale.html" onclick="closeMobile()">Wholesale</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+  <a href="wholesale.html" class="mob-cta">Order Wholesale →</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">South Africa's #grabaflavour Wholesale Leader</span>
+    <h1 class="hero-h1">
+      <span class="c-orange">GRAB</span><br>
+      A <span class="c-teal">FLAV</span><span class="c-yellow">OUR</span>
+    </h1>
+    <p class="hero-sub">SUZ Foods International Food Brands Africa CC — a family business built on years of trust, bringing premium quality chips and tasty snacks to customers across South Africa.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="products.html">Explore Products</a>
+      <a class="btn-ghost" href="about.html">Our Story</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-line"></div><span>Scroll</span></div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Maties <span>✦</span></span>
+    <span class="marquee-item">Snack Haven <span>✦</span></span>
+    <span class="marquee-item">The Big Loaf Co. <span>✦</span></span>
+    <span class="marquee-item">Crispy Cut <span>✦</span></span>
+    <span class="marquee-item">Corn Snacker <span>✦</span></span>
+    <span class="marquee-item">Junior Snacker <span>✦</span></span>
+    <span class="marquee-item">Crack-a-Snack <span>✦</span></span>
+    <span class="marquee-item">#grabaflavour <span>✦</span></span>
+    <span class="marquee-item">Maties <span>✦</span></span>
+    <span class="marquee-item">Snack Haven <span>✦</span></span>
+    <span class="marquee-item">The Big Loaf Co. <span>✦</span></span>
+    <span class="marquee-item">Crispy Cut <span>✦</span></span>
+    <span class="marquee-item">Corn Snacker <span>✦</span></span>
+    <span class="marquee-item">Junior Snacker <span>✦</span></span>
+    <span class="marquee-item">Crack-a-Snack <span>✦</span></span>
+    <span class="marquee-item">#grabaflavour <span>✦</span></span>
+  </div>
+</div>
+
+<!-- BRANDS STRIP -->
+<div class="brands-strip">
+  <div class="brands-strip-label reveal">Our Exclusive Brand Portfolio</div>
+  <div class="brands-logos reveal">
+    <div class="brand-logo-pill yellow">Maties</div>
+    <div class="brand-logo-pill red">Snack Haven</div>
+    <div class="brand-logo-pill teal">The Big Loaf Co.</div>
+    <div class="brand-logo-pill teal">Crispy Cut</div>
+    <div class="brand-logo-pill">Corn Snacker</div>
+    <div class="brand-logo-pill red">Junior Snacker</div>
+    <div class="brand-logo-pill yellow">Crack-a-Snack</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-visual" style="position:relative">
+    <div class="about-canvas-wrap reveal-left">
+      <canvas id="about-canvas"></canvas>
+    </div>
+    <div class="about-badge"><span class="num">25+</span><span class="lbl">Years</span></div>
+  </div>
+  <div class="about-text">
+    <div class="section-tag reveal">Who We Are</div>
+    <h2 class="reveal">BUILT ON<br>TRUST &<br><span style="color:var(--orange)">FLAVOUR</span></h2>
+    <p class="reveal">SUZ Foods International Food Brands Africa CC is a family business, built on years of trust, good taste and passion for bringing a variety of quality chips and tasty snacks to our customers.</p>
+    <p class="reveal">We locally source and select only the finest produce to bring you premium quality chips made right here in South Africa. Go ahead and <strong style="color:var(--orange);background:rgba(255,159,28,0.12);padding:.1em .4em;border-radius:6px;">#grabaflavour</strong> from one of our selected stockists countrywide.</p>
+    <div class="hero-actions reveal" style="margin-top:2rem">
+      <a class="btn-primary" href="about.html">Learn More</a>
+    </div>
+    <div class="stats-row reveal">
+      <div><div class="stat-num" data-count="7" data-suffix="+">0</div><div class="stat-lbl">Own Brands</div></div>
+      <div><div class="stat-num" data-count="25" data-suffix="+">0</div><div class="stat-lbl">Years in Business</div></div>
+      <div><div class="stat-num" data-count="9" data-suffix="">0</div><div class="stat-lbl">Provinces</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="products-header">
+    <div>
+      <div class="section-tag reveal">Our Brand Portfolio</div>
+      <h2 class="reveal">OUR PRODUCT<br>BRANDS</h2>
+    </div>
+    <p class="reveal">Seven iconic snack brands exclusively distributed by SUZ Foods across South Africa.</p>
+  </div>
+  <div class="products-grid">
+
+    <!-- Maties -->
+    <div class="product-card reveal-scale">
+      <div class="product-card-inner">
+        <div class="product-visual" style="background:linear-gradient(135deg,#1a1000,#2a1800)">
+          <div class="product-visual-bg" style="background:var(--yellow)"></div>
+          <canvas class="prod-canvas" data-brand="maties"></canvas>
+          <div class="product-badge" style="background:var(--yellow);color:#000">Puff Chips</div>
+        </div>
+        <div class="product-body">
+          <div class="product-brand-name" style="color:var(--yellow)">Maties</div>
+          <div class="product-tagline" style="color:var(--yellow)">Delightful Puffs & Ball Puff Chips</div>
+          <div class="product-desc">Experience the irresistible crunch of Maties, offering you a delightful range of puffs and ball puff chips that melt in your mouth. Perfect for snacking anytime, anywhere.</div>
+          <div class="product-flavours">
+            <span class="flavour-chip">Original</span>
+            <span class="flavour-chip">Cheese</span>
+            <span class="flavour-chip">Spicy</span>
+          </div>
+        </div>
+        <div class="product-card-footer">
+          <span>Puff Chips</span>
+          <a class="product-link" href="products.html" style="color:var(--yellow)">See Products →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Snack Haven -->
+    <div class="product-card reveal-scale" style="transition-delay:.08s">
+      <div class="product-card-inner">
+        <div class="product-visual" style="background:linear-gradient(135deg,#1a0000,#2a0808)">
+          <div class="product-visual-bg" style="background:var(--red)"></div>
+          <canvas class="prod-canvas" data-brand="snackhaven"></canvas>
+          <div class="product-badge" style="background:var(--red);color:#fff">Bestseller</div>
+        </div>
+        <div class="product-body">
+          <div class="product-brand-name" style="color:var(--red)">Snack Haven</div>
+          <div class="product-tagline" style="color:var(--red)">Flavorful Potato Chips Extravaganza</div>
+          <div class="product-desc">Explore a world of flavors with Snack Haven's diverse range of potato chips. From classic salt to exotic spices, every chip is a burst of deliciousness.</div>
+          <div class="product-flavours">
+            <span class="flavour-chip">Classic Salt</span>
+            <span class="flavour-chip">Chilli</span>
+            <span class="flavour-chip">BBQ</span>
+            <span class="flavour-chip">Cheese</span>
+          </div>
+        </div>
+        <div class="product-card-footer">
+          <span>Potato Chips</span>
+          <a class="product-link" href="products.html" style="color:var(--red)">See Products →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- The Big Loaf Co -->
+    <div class="product-card reveal-scale" style="transition-delay:.16s">
+      <div class="product-card-inner">
+        <div class="product-visual" style="background:linear-gradient(135deg,#001a20,#002a35)">
+          <div class="product-visual-bg" style="background:var(--teal)"></div>
+          <canvas class="prod-canvas" data-brand="bigloaf"></canvas>
+          <div class="product-badge" style="background:var(--teal);color:#000">Artisan Bread</div>
+        </div>
+        <div class="product-body">
+          <div class="product-brand-name" style="color:var(--teal)">The Big Loaf Co.</div>
+          <div class="product-tagline" style="color:var(--teal)">Artisan Bread for Every Occasion</div>
+          <div class="product-desc">Experience the mouthwatering sensation of The Big Loaf Co. Artisan bread. Baked to perfection, our breads are the ideal companion for your meals and snacks.</div>
+          <div class="product-flavours">
+            <span class="flavour-chip">White</span>
+            <span class="flavour-chip">Brown</span>
+            <span class="flavour-chip">Whole Wheat</span>
+          </div>
+        </div>
+        <div class="product-card-footer">
+          <span>Artisan Bread</span>
+          <a class="product-link" href="products.html" style="color:var(--teal)">See Products →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crispy Cut -->
+    <div class="product-card reveal-scale" style="transition-delay:.24s">
+      <div class="product-card-inner">
+        <div class="product-visual" style="background:linear-gradient(135deg,#001520,#002030)">
+          <div class="product-visual-bg" style="background:var(--teal)"></div>
+          <canvas class="prod-canvas" data-brand="crispycut"></canvas>
+        </div>
+        <div class="product-body">
+          <div class="product-brand-name" style="color:var(--teal)">Crispy Cut</div>
+          <div class="product-tagline" style="color:var(--teal)">Crunchy Potato Chips Perfection</div>
+          <div class="product-desc">Indulge in the ultimate crunch with Crispy Cut potato chips. Masterfully thin, these chips are a perfect snack for any chip lover seeking that satisfying snap.</div>
+          <div class="product-flavours">
+            <span class="flavour-chip">Original</span>
+            <span class="flavour-chip">Sour Cream</span>
+            <span class="flavour-chip">Peri-Peri</span>
+          </div>
+        </div>
+        <div class="product-card-footer">
+          <span>Potato Chips</span>
+          <a class="product-link" href="products.html" style="color:var(--teal)">See Products →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Corn Snacker -->
+    <div class="product-card reveal-scale" style="transition-delay:.32s">
+      <div class="product-card-inner">
+        <div class="product-visual" style="background:linear-gradient(135deg,#0a0800,#1a1200)">
+          <div class="product-visual-bg" style="background:#8B4513"></div>
+          <canvas class="prod-canvas" data-brand="cornsnacker"></canvas>
+        </div>
+        <div class="product-body">
+          <div class="product-brand-name" style="color:var(--orange)">Corn Snacker</div>
+          <div class="product-tagline" style="color:var(--orange)">Maize Chips with a Twist</div>
+          <div class="product-desc">Enjoy the extraordinary blend of flavors in Corn Snacker, where crispy meets delicious to redefine your snacking experience. A bold snack for all ages.</div>
+          <div class="product-flavours">
+            <span class="flavour-chip">Salted</span>
+            <span class="flavour-chip">Chilli</span>
+            <span class="flavour-chip">BBQ</span>
+          </div>
+        </div>
+        <div class="product-card-footer">
+          <span>Maize Chips</span>
+          <a class="product-link" href="products.html" style="color:var(--orange)">See Products →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Junior Snacker -->
+    <div class="product-card reveal-scale" style="transition-delay:.40s">
+      <div class="product-card-inner">
+        <div class="product-visual" style="background:linear-gradient(135deg,#1a0500,#2a0a00)">
+          <div class="product-visual-bg" style="background:var(--orange2)"></div>
+          <canvas class="prod-canvas" data-brand="juniorsnacker"></canvas>
+          <div class="product-badge" style="background:var(--orange2);color:#fff">Kids Fave</div>
+        </div>
+        <div class="product-body">
+          <div class="product-brand-name" style="color:var(--orange2)">Junior Snacker</div>
+          <div class="product-tagline" style="color:var(--orange2)">Kid-Friendly Maize Chips</div>
+          <div class="product-desc">Your little ones will go wild for Junior Snacker's maize chips, hand-crafted to satisfy young snack lovers and inspire a perfect taste for budding snack enthusiasts.</div>
+          <div class="product-flavours">
+            <span class="flavour-chip">Cheese</span>
+            <span class="flavour-chip">Original</span>
+          </div>
+        </div>
+        <div class="product-card-footer">
+          <span>Kids Maize Chips</span>
+          <a class="product-link" href="products.html" style="color:var(--orange2)">See Products →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crack-a-Snack — spans 3 cols for emphasis -->
+    <div class="product-card reveal-scale" style="transition-delay:.48s;grid-column:span 3">
+      <div class="product-card-inner" style="display:grid;grid-template-columns:1fr 1fr;min-height:280px">
+        <div class="product-visual" style="background:linear-gradient(135deg,#1a1400,#2a2000);min-height:280px">
+          <div class="product-visual-bg" style="background:var(--green)"></div>
+          <canvas class="prod-canvas" data-brand="crackasnack" style="width:100%!important;height:100%!important"></canvas>
+          <div class="product-badge" style="background:var(--green);color:#fff">New Favourite</div>
+        </div>
+        <div style="display:flex;flex-direction:column;padding:2.5rem 2rem;background:var(--bg);border-top:1px solid var(--border)">
+          <div class="product-brand-name" style="color:var(--green);font-size:2.5rem">Crack-a-Snack</div>
+          <div class="product-tagline" style="color:var(--green);margin-bottom:1rem">Maize Chips Full of Flavour</div>
+          <div class="product-desc">Enjoy the unique taste of Crack-a-Snack, where crispy maize chips meet your mouth to deliver an explosion of bold flavour. A must-try for all snack enthusiasts.</div>
+          <div class="product-flavours" style="margin-top:1rem">
+            <span class="flavour-chip">Original</span><span class="flavour-chip">Chilli</span><span class="flavour-chip">Cheese</span><span class="flavour-chip">BBQ</span>
+          </div>
+          <a class="btn-primary" href="products.html" style="margin-top:auto;padding-top:1rem;display:inline-block;margin-top:1.5rem;background:var(--green)">See Products →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-tag reveal">Happy Partners</div>
+  <h2 class="reveal">WHAT OUR<br>STOCKISTS SAY</h2>
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <div class="testi-stars" style="color:var(--yellow)">★★★★★</div>
+      <div class="testi-text">"SUZ Foods has been our go-to wholesale supplier for years. Their product quality is consistently excellent and delivery is always on time. The Maties and Crispy Cut ranges fly off our shelves!"</div>
+      <div class="testi-author">
+        <div class="testi-avatar">TM</div>
+        <div><div class="testi-name">Thabo Mokoena</div><div class="testi-biz">TM Superette, Pretoria</div></div>
+      </div>
+    </div>
+    <div class="testi-card reveal" style="transition-delay:.1s">
+      <div class="testi-stars" style="color:var(--teal)">★★★★★</div>
+      <div class="testi-text">"The Big Loaf Co. bread and Snack Haven chips are among our best-selling products. SUZ's team is incredibly professional and their pricing gives us great margins. Highly recommended!"</div>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:linear-gradient(135deg,var(--teal),var(--orange))">NP</div>
+        <div><div class="testi-name">Naledi Phiri</div><div class="testi-biz">Corner Shop Plus, Johannesburg</div></div>
+      </div>
+    </div>
+    <div class="testi-card reveal" style="transition-delay:.2s">
+      <div class="testi-stars" style="color:var(--red)">★★★★★</div>
+      <div class="testi-text">"We've been stocking Junior Snacker and Corn Snacker for our school tuck shop and the kids love them. SUZ is responsive, fair-priced and a genuine pleasure to work with as a family business."</div>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:linear-gradient(135deg,var(--red),var(--yellow))">SM</div>
+        <div><div class="testi-name">Sarah Malan</div><div class="testi-biz">Andeon School Tuck Shop</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="section-tag reveal">Product Showcase</div>
+  <h2 class="reveal">OUR BRANDS<br>IN ACTION</h2>
+  <div class="gallery-grid">
+    <div class="gallery-item reveal-scale">
+      <canvas class="gallery-canvas" data-scene="hero"></canvas>
+      <div class="gallery-overlay"><span class="gallery-label">Full Brand Range</span></div>
+    </div>
+    <div class="gallery-item reveal-scale" style="transition-delay:.05s">
+      <canvas class="gallery-canvas" data-scene="maties"></canvas>
+      <div class="gallery-overlay"><span class="gallery-label">Maties Puff Chips</span></div>
+    </div>
+    <div class="gallery-item reveal-scale" style="transition-delay:.1s">
+      <canvas class="gallery-canvas" data-scene="snackhaven"></canvas>
+      <div class="gallery-overlay"><span class="gallery-label">Snack Haven</span></div>
+    </div>
+    <div class="gallery-item reveal-scale" style="transition-delay:.15s">
+      <canvas class="gallery-canvas" data-scene="crispy"></canvas>
+      <div class="gallery-overlay"><span class="gallery-label">Crispy Cut</span></div>
+    </div>
+    <div class="gallery-item reveal-scale" style="transition-delay:.2s">
+      <canvas class="gallery-canvas" data-scene="corn"></canvas>
+      <div class="gallery-overlay"><span class="gallery-label">Corn Snacker</span></div>
+    </div>
+    <div class="gallery-item reveal-scale" style="transition-delay:.25s">
+      <canvas class="gallery-canvas" data-scene="junior"></canvas>
+      <div class="gallery-overlay"><span class="gallery-label">Junior Snacker</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section id="news">
+  <div class="section-tag reveal">Latest Updates</div>
+  <h2 class="reveal">NEWS &<br>UPDATES</h2>
+  <div class="news-grid">
+    <div class="news-card reveal">
+      <div class="news-visual" style="background:linear-gradient(135deg,#1a1000,#2a1800);color:var(--yellow)">MATIES</div>
+      <div class="news-body">
+        <div class="news-meta"><span class="news-cat">New Product</span><span class="news-date">March 2026</span></div>
+        <div class="news-title">Maties Launches New Spicy Ball Puff Flavour</div>
+        <div class="news-excerpt">Our beloved Maties brand has expanded its range with a fiery new spicy ball puff flavour — now available to wholesale stockists nationwide.</div>
+        <a class="news-read" href="wholesale.html">Order Now</a>
+      </div>
+    </div>
+    <div class="news-card reveal" style="transition-delay:.1s">
+      <div class="news-visual" style="background:linear-gradient(135deg,#001520,#002030);color:var(--teal)">BIG LOAF</div>
+      <div class="news-body">
+        <div class="news-meta"><span class="news-cat">Expansion</span><span class="news-date">February 2026</span></div>
+        <div class="news-title">The Big Loaf Co. Now Available in More Provinces</div>
+        <div class="news-excerpt">Following massive demand, The Big Loaf Co. artisan bread range is now available for wholesale distribution in Limpopo, Mpumalanga, and the Free State.</div>
+        <a class="news-read" href="wholesale.html">Stock It Now</a>
+      </div>
+    </div>
+    <div class="news-card reveal" style="transition-delay:.2s">
+      <div class="news-visual" style="background:linear-gradient(135deg,#0a0800,#1a1200);color:var(--orange)">#GRABA FLAVOUR</div>
+      <div class="news-body">
+        <div class="news-meta"><span class="news-cat">Campaign</span><span class="news-date">January 2026</span></div>
+        <div class="news-title">#GrabaFlavour Campaign Reaches 1 Million People</div>
+        <div class="news-excerpt">Our flagship social campaign celebrating South African snack culture has reached over one million impressions. Join the movement and get your stockist kit today.</div>
+        <a class="news-read" href="#contact">Get In Touch</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-tag reveal">Why Choose SUZ</div>
+  <h2 class="reveal">WHAT SETS US<br>APART</h2>
+  <div class="features-grid">
+    <div class="feature-item reveal"><span class="feature-icon">🏭</span><div class="feature-title">Locally Sourced</div><div class="feature-desc">We locally source and select only the finest South African produce to bring premium quality products right here at home.</div></div>
+    <div class="feature-item reveal" style="transition-delay:.08s"><span class="feature-icon">🚚</span><div class="feature-title">Nationwide Delivery</div><div class="feature-desc">Reliable delivery across all 9 provinces. Your shelves stay stocked and your customers stay happy.</div></div>
+    <div class="feature-item reveal" style="transition-delay:.16s"><span class="feature-icon">⭐</span><div class="feature-title">Food Safety Certified</div><div class="feature-desc">All our products meet stringent South African food safety standards. Quality you can trust in every pack.</div></div>
+    <div class="feature-item reveal" style="transition-delay:.24s"><span class="feature-icon">🤝</span><div class="feature-title">Family Business</div><div class="feature-desc">25+ years of partnerships built on trust, integrity, and a genuine love for great South African flavours.</div></div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section id="cta-band">
+  <div class="section-tag reveal" style="justify-content:center">Ready to Stock Up?</div>
+  <h2 class="reveal">BECOME A<br><span style="color:var(--orange)">STOCKIST</span></h2>
+  <p class="reveal">Join hundreds of retailers across South Africa. Order wholesale and start selling South Africa's most loved snack brands.</p>
+  <div class="cta-actions reveal">
+    <a class="btn-primary" href="wholesale.html">Start Wholesale Order</a>
+    <a class="btn-ghost" href="#contact">Send Enquiry</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-info">
+    <div class="section-tag reveal">Get In Touch</div>
+    <h2 class="reveal">LET'S DO<br>BUSINESS</h2>
+    <p class="reveal">Our team is ready to assist with wholesale pricing, product catalogues, and delivery queries.</p>
+    <div class="contact-detail reveal">
+      <div class="cd-icon">📍</div>
+      <div class="cd-text"><strong>Address</strong><span>2051 Erma Street, Andeon, 0183, South Africa</span></div>
+    </div>
+    <div class="contact-detail reveal">
+      <div class="cd-icon">📞</div>
+      <div class="cd-text"><strong>Office</strong><a href="tel:0123720201">(012) 372-0201</a></div>
+    </div>
+    <div class="contact-detail reveal">
+      <div class="cd-icon">💬</div>
+      <div class="cd-text"><strong>WhatsApp</strong><a href="https://wa.me/27817153423">081 715 3423</a></div>
+    </div>
+    <div class="contact-detail reveal">
+      <div class="cd-icon">✉️</div>
+      <div class="cd-text"><strong>Sales</strong><a href="mailto:sales@suzholdings.co.za">sales@suzholdings.co.za</a></div>
+    </div>
+    <div class="contact-detail reveal">
+      <div class="cd-icon">✉️</div>
+      <div class="cd-text"><strong>Services</strong><a href="mailto:services@suzholdings.co.za">services@suzholdings.co.za</a></div>
+    </div>
+  </div>
+  <form class="contact-form reveal" onsubmit="handleSubmit(event)">
+    <div class="form-row">
+      <div class="form-group"><label>First Name</label><input type="text" placeholder="Your name" required></div>
+      <div class="form-group"><label>Last Name</label><input type="text" placeholder="Your surname" required></div>
+    </div>
+    <div class="form-group"><label>Email</label><input type="email" placeholder="you@business.com" required></div>
+    <div class="form-group"><label>Phone</label><input type="tel" placeholder="+27 XX XXX XXXX"></div>
+    <div class="form-group">
+      <label>Interested In</label>
+      <select>
+        <option>Wholesale Partnership</option>
+        <option>Product Enquiry</option>
+        <option>Maties</option>
+        <option>Snack Haven</option>
+        <option>The Big Loaf Co.</option>
+        <option>Crispy Cut</option>
+        <option>Corn Snacker</option>
+        <option>Junior Snacker</option>
+        <option>Crack-a-Snack</option>
+        <option>General Enquiry</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Message</label><textarea placeholder="Tell us about your business and what you're looking for..."></textarea></div>
+    <button type="submit" class="submit-btn">Send Message →</button>
+    <div id="form-success">✓ Message sent! We'll be in touch within 24 hours.</div>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="footer-logo"><img src="uploads/logo-1776757362469.png" alt="SUZ Foods"></a>
+  <p class="footer-copy">© 2026 SUZ Foods International Food Brands Africa CC · Andeon, Pretoria · Reg. No. CC</p>
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="products.html">Products</a>
+    <a href="wholesale.html">Wholesale</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<!-- TWEAK PANEL -->
+<div id="tweak-panel">
+  <h3>Tweaks</h3>
+  <div class="tweak-row">
+    <label>Accent Color</label>
+    <input type="color" id="tw-accent" value="#F4A21C" oninput="applyAccent(this.value)">
+  </div>
+  <div class="tweak-row">
+    <label>Hero Text Style</label>
+    <select onchange="applyHeroStyle(this.value)">
+      <option value="0">GRAB A FLAVOUR</option>
+      <option value="1">TASTE THAT MOVES SA</option>
+      <option value="2">SA'S SNACK FAMILY</option>
+    </select>
+  </div>
+  <div class="tweak-row">
+    <label>Bag Spin Speed</label>
+    <select onchange="document.querySelectorAll('.bag-3d').forEach(el=>el.style.animationDuration=this.value)">
+      <option value="8s">Normal</option><option value="4s">Fast</option><option value="14s">Slow</option>
+    </select>
+  </div>
+</div>
+
+<script>
+// TWEAK DEFAULTS
+const TWEAK_DEFAULTS=/*EDITMODE-BEGIN*/{
+  "accentColor": "#1fcaf4"
+}/*EDITMODE-END*/;
+
+// PRELOADER
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('preloader').classList.add('hidden'),1800));
+
+// CURSOR
+const $c=document.getElementById('cursor'),$r=document.getElementById('cursor-ring'),$g=document.getElementById('cursor-glow');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function tick(){
+  $c.style.left=mx+'px';$c.style.top=my+'px';
+  rx+=(mx-rx)*.1;ry+=(my-ry)*.1;
+  $r.style.left=rx+'px';$r.style.top=ry+'px';
+  $g.style.left=mx+'px';$g.style.top=my+'px';
+  requestAnimationFrame(tick);
+})();
+
+// NAV
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+window.addEventListener('scroll',()=>{
+  const hc=document.querySelector('.hero-content');
+  if(hc)hc.style.transform=`translateY(${scrollY*.22}px)`;
+});
+
+// HAMBURGER
+const ham=document.getElementById('hamburger'),mob=document.getElementById('mobile-menu');
+ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.toggle('open');document.body.style.overflow=mob.classList.contains('open')?'hidden':'';});
+function closeMobile(){ham.classList.remove('open');mob.classList.remove('open');document.body.style.overflow='';}
+
+// ── BRAND COLORS ──
+const BRANDS = {
+  maties:      { c1:0xE6C800, c2:0xFFFFFF, c3:0xC8AA00, label:'MATIES',      top:0xFFFFFF },
+  snackhaven:  { c1:0xCC2929, c2:0xFFD700, c3:0xAA1818, label:'SNACK HAVEN', top:0xFFD700 },
+  bigloaf:     { c1:0x00AECC, c2:0xF4A21C, c3:0x008FA8, label:'BIG LOAF',    top:0xF4A21C },
+  crispycut:   { c1:0x0099BB, c2:0xFFFFFF, c3:0x007A99, label:'CRISPY CUT',  top:0xFFFFFF },
+  cornsnacker: { c1:0x3D1F00, c2:0xF4A21C, c3:0x2A1500, label:'CORN SNK',    top:0xF4A21C },
+  juniorsnacker:{ c1:0xE8631A, c2:0xFFD700, c3:0xC04E10, label:'JUNIOR',     top:0xFFD700 },
+  crackasnack: { c1:0x4C9A2A, c2:0xFFD700, c3:0x3A7A1E, label:'CRACK-A',     top:0xFFD700 },
+};
+
+function makeBagGroup(THREE, brandKey, scale=1) {
+  const b = BRANDS[brandKey] || BRANDS.maties;
+  const g = new THREE.Group();
+  // Body
+  g.add(new THREE.Mesh(
+    new THREE.BoxGeometry(1.5*scale, 2.2*scale, 0.55*scale),
+    new THREE.MeshPhongMaterial({color:b.c1, shininess:90, emissive:b.c1, emissiveIntensity:.05})
+  ));
+  // Side stripes
+  [-0.65*scale, 0.65*scale].forEach(x=>{
+    const stripe=new THREE.Mesh(new THREE.BoxGeometry(0.18*scale,2.2*scale,0.56*scale),new THREE.MeshPhongMaterial({color:b.c3,shininess:60}));
+    stripe.position.x=x; g.add(stripe);
+  });
+  // Top clip
+  const top=new THREE.Mesh(new THREE.BoxGeometry(1.2*scale,0.35*scale,0.65*scale),new THREE.MeshPhongMaterial({color:b.top,shininess:120}));
+  top.position.y=1.28*scale; g.add(top);
+  // Bottom fold
+  const bot=new THREE.Mesh(new THREE.BoxGeometry(1.3*scale,0.2*scale,0.6*scale),new THREE.MeshPhongMaterial({color:b.c3,shininess:80}));
+  bot.position.y=-1.15*scale; g.add(bot);
+  return g;
+}
+
+// ── HERO THREE.JS ──
+(function(){
+  const canvas=document.getElementById('hero-canvas');
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(60,1,.1,100);
+  camera.position.z=18;
+  function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);renderer.setPixelRatio(Math.min(devicePixelRatio,2));camera.aspect=w/h;camera.updateProjectionMatrix();}
+  resize(); window.addEventListener('resize',resize);
+
+  const brandKeys=Object.keys(BRANDS);
+  const bags=[];
+  for(let i=0;i<16;i++){
+    const key=brandKeys[i%brandKeys.length];
+    const g=makeBagGroup(THREE,key,0.8+Math.random()*.9);
+    g.position.set((Math.random()-.5)*44,(Math.random()-.5)*24,(Math.random()-.5)*12-5);
+    g.rotation.set(Math.random()*Math.PI*2,Math.random()*Math.PI*2,Math.random()*Math.PI*2);
+    bags.push({g,vy:(Math.random()-.5)*.006,vx:(Math.random()-.5)*.004,rx:(Math.random()-.5)*.009,ry:(Math.random()-.5)*.012,rz:(Math.random()-.5)*.007,foff:Math.random()*Math.PI*2,fspd:.3+Math.random()*.5});
+    scene.add(g);
+  }
+  scene.add(new THREE.AmbientLight(0xffffff,.35));
+  const l1=new THREE.PointLight(0xF4A21C,4,35);l1.position.set(5,5,9);scene.add(l1);
+  const l2=new THREE.PointLight(0x00AECC,2.5,28);l2.position.set(-8,-4,7);scene.add(l2);
+  const l3=new THREE.PointLight(0xffffff,1.5,20);l3.position.set(0,8,5);scene.add(l3);
+  let mx3=0,my3=0;
+  document.addEventListener('mousemove',e=>{mx3=(e.clientX/innerWidth-.5)*2;my3=(e.clientY/innerHeight-.5)*2;});
+  const clock=new THREE.Clock();
+  (function anim(){
+    requestAnimationFrame(anim);
+    const t=clock.getElapsedTime();
+    bags.forEach(b=>{
+      b.g.rotation.x+=b.rx;b.g.rotation.y+=b.ry;b.g.rotation.z+=b.rz;
+      b.g.position.x+=b.vx;b.g.position.y+=b.vy;
+      b.g.position.y+=Math.sin(t*b.fspd+b.foff)*.008;
+      if(b.g.position.x>24)b.g.position.x=-24;if(b.g.position.x<-24)b.g.position.x=24;
+      if(b.g.position.y>15)b.g.position.y=-15;if(b.g.position.y<-15)b.g.position.y=15;
+    });
+    camera.position.x+=(mx3*2-camera.position.x)*.025;
+    camera.position.y+=(-my3*1.5-camera.position.y)*.025;
+    camera.lookAt(scene.position);
+    renderer.render(scene,camera);
+  })();
+})();
+
+// ── ABOUT CANVAS ──
+(function(){
+  const canvas=document.getElementById('about-canvas');
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(50,1,.1,50);
+  camera.position.z=9;
+  function resize(){const w=canvas.clientWidth||400,h=canvas.clientHeight||500;renderer.setSize(w,h,false);renderer.setPixelRatio(Math.min(devicePixelRatio,2));camera.aspect=w/h;camera.updateProjectionMatrix();}
+  setTimeout(resize,300); window.addEventListener('resize',()=>setTimeout(resize,100));
+
+  // Large central bag (Maties-style)
+  const mainGroup=new THREE.Group();
+  const main=makeBagGroup(THREE,'maties',1.7);
+  mainGroup.add(main);
+  scene.add(mainGroup);
+
+  // Orbiting smaller brand bags
+  const orbData=[
+    {key:'snackhaven',r:4.5,a:0,spd:.008},
+    {key:'crispycut',r:4.2,a:2.1,spd:.006},
+    {key:'cornsnacker',r:4.8,a:4.2,spd:.007},
+    {key:'juniorsnacker',r:3.8,a:1.0,spd:.009},
+  ];
+  const orbs=orbData.map(od=>{
+    const og=new THREE.Group();
+    og.add(makeBagGroup(THREE,od.key,.65));
+    scene.add(og);
+    return {...od,og};
+  });
+
+  scene.add(new THREE.AmbientLight(0xffffff,.4));
+  const l1=new THREE.PointLight(0xF4A21C,6,22);l1.position.set(4,4,6);scene.add(l1);
+  const l2=new THREE.PointLight(0x00AECC,3,18);l2.position.set(-4,-2,5);scene.add(l2);
+  const clock=new THREE.Clock();
+  (function anim(){
+    requestAnimationFrame(anim);
+    const t=clock.getElapsedTime();
+    mainGroup.rotation.y=Math.sin(t*.4)*.4;
+    mainGroup.position.y=Math.sin(t*.6)*.3;
+    orbs.forEach(o=>{
+      o.a+=o.spd;
+      o.og.position.x=Math.cos(o.a)*o.r;
+      o.og.position.y=Math.sin(o.a*1.3)*1.8;
+      o.og.position.z=Math.sin(o.a)*2.5;
+      o.og.rotation.y+=.025; o.og.rotation.x+=.012;
+    });
+    renderer.render(scene,camera);
+  })();
+})();
+
+// ── PRODUCT CARD MINI CANVASES ──
+document.querySelectorAll('.prod-canvas').forEach((canvas,idx)=>{
+  const brand=canvas.dataset.brand;
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(50,1,.1,30);
+  camera.position.z=5.5;
+  function resize(){const w=canvas.clientWidth||240,h=canvas.clientHeight||220;renderer.setSize(w,h,false);renderer.setPixelRatio(Math.min(devicePixelRatio,2));camera.aspect=w/h;camera.updateProjectionMatrix();}
+  setTimeout(()=>resize(),400+idx*30);
+  window.addEventListener('resize',()=>setTimeout(resize,100));
+  const g=makeBagGroup(THREE,brand,1.15);
+  scene.add(g);
+  scene.add(new THREE.AmbientLight(0xffffff,.5));
+  const l=new THREE.PointLight(0xffffff,5,18);l.position.set(3,4,5);scene.add(l);
+  const l2=new THREE.PointLight(0xF4A21C,3,12);l2.position.set(-3,-2,4);scene.add(l2);
+  const clock=new THREE.Clock();
+  const offset=idx*1.1;
+  (function anim(){
+    requestAnimationFrame(anim);
+    const t=clock.getElapsedTime()+offset;
+    g.rotation.y=t*.7;
+    g.rotation.x=Math.sin(t*.4)*.2;
+    g.position.y=Math.sin(t*.6)*.2;
+    renderer.render(scene,camera);
+  })();
+});
+
+// ── GALLERY CANVASES ──
+document.querySelectorAll('.gallery-canvas').forEach((canvas,idx)=>{
+  const scene_key=canvas.dataset.scene;
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(55,1,.1,60);
+  camera.position.z=12;
+  function resize(){const w=canvas.clientWidth||300,h=canvas.clientHeight||220;renderer.setSize(w,h,false);renderer.setPixelRatio(Math.min(devicePixelRatio,2));camera.aspect=w/h;camera.updateProjectionMatrix();}
+  setTimeout(()=>resize(),600+idx*40);
+  window.addEventListener('resize',()=>setTimeout(resize,100));
+
+  const brandKeys=Object.keys(BRANDS);
+  let bags=[];
+  if(scene_key==='hero'){
+    // All brands
+    brandKeys.forEach((k,i)=>{
+      const g=makeBagGroup(THREE,k,.9);
+      const angle=(i/brandKeys.length)*Math.PI*2;
+      g.position.set(Math.cos(angle)*4,Math.sin(angle)*1.5,Math.sin(angle)*2);
+      g.rotation.y=Math.random()*Math.PI;
+      bags.push({g,angle,i});
+      scene.add(g);
+    });
+  } else {
+    const key=scene_key==='crispy'?'crispycut':scene_key==='corn'?'cornsnacker':scene_key==='junior'?'juniorsnacker':scene_key;
+    for(let i=0;i<3;i++){
+      const g=makeBagGroup(THREE,key,.85);
+      g.position.set((i-1)*3,(i%2)*.8,-(i%2)*1.5);
+      g.rotation.y=Math.random()*Math.PI;
+      bags.push({g,i});
+      scene.add(g);
+    }
+  }
+  scene.add(new THREE.AmbientLight(0xffffff,.4));
+  const l1=new THREE.PointLight(0xF4A21C,5,25);l1.position.set(4,4,8);scene.add(l1);
+  const l2=new THREE.PointLight(0x00AECC,3,20);l2.position.set(-5,-3,6);scene.add(l2);
+  const clock=new THREE.Clock();
+  (function anim(){
+    requestAnimationFrame(anim);
+    const t=clock.getElapsedTime()+idx*.8;
+    if(scene_key==='hero'){
+      bags.forEach((b,i)=>{
+        b.g.rotation.y+=.01;
+        b.g.position.x=Math.cos(t*.15+b.i*Math.PI*2/brandKeys.length)*4;
+        b.g.position.y=Math.sin(t*.15+b.i*Math.PI*2/brandKeys.length)*1.5+Math.sin(t*.5)*.3;
+        b.g.position.z=Math.sin(t*.15+b.i*Math.PI*2/brandKeys.length)*2;
+      });
+    } else {
+      bags.forEach((b,i)=>{
+        b.g.rotation.y+=.008;
+        b.g.position.y=(b.i%2)*.8+Math.sin(t*.5+b.i)*0.2;
+      });
+    }
+    renderer.render(scene,camera);
+  })();
+});
+
+// ── SCROLL REVEAL ──
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.08});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el=>io.observe(el));
+
+// ── COUNTERS ──
+const cObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('[data-count]').forEach(el=>{
+        const target=+el.dataset.count,suf=el.dataset.suffix||'';
+        let n=0;const step=Math.ceil(target/55);
+        const tmr=setInterval(()=>{n+=step;if(n>=target){el.textContent=target+suf;clearInterval(tmr);}else el.textContent=n+suf;},22);
+      });
+      cObs.unobserve(e.target);
+    }
+  });
+},{threshold:.4});
+const sr=document.querySelector('.stats-row');
+if(sr)cObs.observe(sr);
+
+// ── FORM ──
+function handleSubmit(e){e.preventDefault();document.getElementById('form-success').style.display='block';e.target.reset();}
+
+// ── TWEAKS ──
+const headlines=[
+  ['<span class="c-orange">GRAB</span><br>A <span class="c-teal">FLAV</span><span class="c-yellow">OUR</span>'],
+  ['TASTE<br>THAT <span class="c-orange">MOVES</span><br>SA'],
+  ["SA'S<br><span class='c-orange'>SNACK</span><br>FAMILY"]
+];
+window.addEventListener('message',e=>{
+  if(e.data?.type==='__activate_edit_mode')document.getElementById('tweak-panel').style.display='block';
+  if(e.data?.type==='__deactivate_edit_mode')document.getElementById('tweak-panel').style.display='none';
+});
+window.parent.postMessage({type:'__edit_mode_available'},'*');
+function applyAccent(v){document.documentElement.style.setProperty('--orange',v);window.parent.postMessage({type:'__edit_mode_set_keys',edits:{accentColor:v}},'*');}
+function applyHeroStyle(i){document.querySelector('.hero-h1').innerHTML=headlines[i];}
+if(TWEAK_DEFAULTS.accentColor&&TWEAK_DEFAULTS.accentColor!=='#F4A21C'){applyAccent(TWEAK_DEFAULTS.accentColor);document.getElementById('tw-accent').value=TWEAK_DEFAULTS.accentColor;}
+</script>
+</body>
+</html>

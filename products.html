@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products — SUZ Foods</title>
+<link rel="stylesheet" href="shared.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<style>
+.page-hero { min-height:55vh; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-end; padding:8rem 3rem 4rem; position:relative; overflow:hidden; }
+.page-hero-grid { position:absolute; inset:0; opacity:.035; background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px); background-size:60px 60px; }
+.page-hero-glow { position:absolute; inset:0; background:radial-gradient(ellipse at 60% 40%,rgba(244,162,28,.12) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(0,174,204,.08) 0%,transparent 50%); }
+.breadcrumb { font-size:.72rem; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); margin-bottom:2rem; position:relative; z-index:1; opacity:0; animation:fadeUp .6s .2s forwards; }
+.breadcrumb a { color:var(--orange); text-decoration:none; }
+.page-hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(4rem,10vw,8rem); line-height:.9; position:relative; z-index:1; opacity:0; animation:fadeUp .9s .3s forwards; }
+.page-hero h1 .c-orange { color:var(--orange); }
+.page-hero h1 .c-teal { color:var(--teal); }
+.page-hero p { color:var(--muted); font-size:1rem; line-height:1.7; max-width:500px; margin-top:1.5rem; position:relative; z-index:1; opacity:0; animation:fadeUp .9s .5s forwards; }
+
+/* BRAND SHOWCASE */
+.brands-showcase { padding:6rem 3rem; }
+.brands-showcase-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:2rem; margin-top:4rem; }
+
+.brand-block {
+  border-radius:10px; overflow:hidden; border:1px solid var(--border);
+  transition:border-color .3s, transform .4s cubic-bezier(.22,1,.36,1), box-shadow .3s;
+  cursor:pointer;
+}
+.brand-block:hover { transform:translateY(-8px); box-shadow:0 20px 60px rgba(0,0,0,.5); }
+
+.brand-block-inner { display:grid; grid-template-columns:1fr 1.2fr; min-height:320px; }
+.brand-block-inner.flip { grid-template-columns:1.2fr 1fr; }
+.brand-block-inner.flip .brand-3d { order:2; }
+.brand-block-inner.flip .brand-info { order:1; }
+
+.brand-3d { position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; min-height:320px; }
+.brand-3d canvas { position:absolute; inset:0; width:100%!important; height:100%!important; }
+.brand-3d-bg { position:absolute; inset:0; }
+
+.brand-info { padding:2.5rem 2rem; background:var(--bg); display:flex; flex-direction:column; justify-content:center; }
+.brand-logo-text { font-family:'Bebas Neue',sans-serif; font-size:2.5rem; letter-spacing:.04em; line-height:1; margin-bottom:.5rem; }
+.brand-sub { font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; margin-bottom:1rem; }
+.brand-desc { font-size:.88rem; color:var(--muted); line-height:1.7; margin-bottom:1.5rem; }
+.brand-range { margin-bottom:1.5rem; }
+.brand-range-label { font-size:.65rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-bottom:.5rem; }
+.brand-tags { display:flex; gap:.4rem; flex-wrap:wrap; }
+.btag { font-size:.72rem; padding:.3rem .75rem; border-radius:3px; border:1px solid; font-weight:500; }
+.brand-cta { font-size:.8rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; display:inline-flex; align-items:center; gap:.4rem; transition:gap .2s; margin-top:auto; }
+.brand-cta:hover { gap:.7rem; }
+.brand-cta::after { content:'→'; }
+
+/* FULL CATALOGUE GRID */
+.catalogue-section { padding:6rem 3rem; background:var(--surface); border-top:1px solid var(--border); }
+.filter-bar { display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; margin-bottom:3rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border); }
+.filter-label { font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-right:.5rem; }
+.filter-btn { padding:.5rem 1.2rem; border:1px solid var(--border); border-radius:100px; background:none; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:.78rem; letter-spacing:.05em; cursor:pointer; transition:all .22s; }
+.filter-btn:hover { border-color:var(--orange); color:var(--white); }
+.filter-btn.active { background:var(--orange); border-color:var(--orange); color:#000; font-weight:600; }
+
+.cat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.2rem; }
+.cat-card { background:var(--bg); border:1px solid var(--border); border-radius:8px; overflow:hidden; cursor:pointer; transition:border-color .3s,transform .35s cubic-bezier(.22,1,.36,1); }
+.cat-card:hover { transform:translateY(-5px); }
+.cat-visual { height:160px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+.cat-visual canvas { position:absolute; inset:0; width:100%!important; height:100%!important; }
+.cat-badge { position:absolute; top:.75rem; right:.75rem; font-size:.62rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:.25rem .55rem; border-radius:2px; }
+.cat-body { padding:1.2rem; }
+.cat-brand { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:.03em; }
+.cat-name { font-size:.78rem; color:var(--muted); margin-bottom:.5rem; }
+.cat-flavours { display:flex; gap:.3rem; flex-wrap:wrap; margin-top:.6rem; }
+.fchip { font-size:.63rem; padding:.2rem .5rem; background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:2px; color:var(--muted); }
+
+@media (max-width:1000px) { .brand-block-inner,.brand-block-inner.flip { grid-template-columns:1fr; } .brand-3d { min-height:220px; } .cat-grid { grid-template-columns:repeat(2,1fr); } }
+@media (max-width:600px) { .brands-showcase-grid { grid-template-columns:1fr; } .cat-grid { grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+<div id="preloader">
+  <img src="uploads/logo-1776757362469.png" alt="SUZ Foods">
+  <div class="pre-bar-wrap"><div class="pre-bar"></div></div>
+  <div class="pre-tag">Our Product Brands</div>
+</div>
+<div id="cursor"></div><div id="cursor-ring"></div><div id="cursor-glow"></div>
+<a class="wa-float" href="https://wa.me/27817153423" target="_blank"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+
+<nav id="nav">
+  <a class="nav-logo" href="index.html"><img src="uploads/logo-1776757362469.png" alt="SUZ Foods"></a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="products.html" class="active">Products</a></li>
+    <li><a href="about.html">Our Story</a></li>
+    <li><a href="wholesale.html">Wholesale</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="wholesale.html">Order Wholesale</a>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html" onclick="closeMobile()">Home</a>
+  <a href="products.html" onclick="closeMobile()">Products</a>
+  <a href="about.html" onclick="closeMobile()">Our Story</a>
+  <a href="wholesale.html" onclick="closeMobile()">Wholesale</a>
+  <a href="index.html#contact" onclick="closeMobile()">Contact</a>
+  <a href="wholesale.html" class="mob-cta">Order Wholesale →</a>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-grid"></div>
+  <div class="page-hero-glow"></div>
+  <div class="breadcrumb"><a href="index.html">Home</a> / Products</div>
+  <h1>THIS IS <span class="c-orange">SUZ</span><br><span class="c-teal">FOODS</span></h1>
+  <p>Seven iconic South African snack and food brands — from irresistible puff chips to artisan bread — all under the SUZ family umbrella.</p>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Maties <span>✦</span></span><span class="marquee-item">Snack Haven <span>✦</span></span><span class="marquee-item">The Big Loaf Co. <span>✦</span></span><span class="marquee-item">Crispy Cut <span>✦</span></span><span class="marquee-item">Corn Snacker <span>✦</span></span><span class="marquee-item">Junior Snacker <span>✦</span></span><span class="marquee-item">Crack-a-Snack <span>✦</span></span><span class="marquee-item">#grabaflavour <span>✦</span></span>
+    <span class="marquee-item">Maties <span>✦</span></span><span class="marquee-item">Snack Haven <span>✦</span></span><span class="marquee-item">The Big Loaf Co. <span>✦</span></span><span class="marquee-item">Crispy Cut <span>✦</span></span><span class="marquee-item">Corn Snacker <span>✦</span></span><span class="marquee-item">Junior Snacker <span>✦</span></span><span class="marquee-item">Crack-a-Snack <span>✦</span></span><span class="marquee-item">#grabaflavour <span>✦</span></span>
+  </div>
+</div>
+
+<!-- BRAND SHOWCASE -->
+<section class="brands-showcase">
+  <div class="section-tag reveal">Our Portfolio</div>
+  <h2 class="reveal">SEVEN BRANDS.<br>ONE FAMILY.</h2>
+  <div class="brands-showcase-grid">
+
+    <!-- Maties -->
+    <div class="brand-block reveal-scale" style="border-color:rgba(230,200,0,.2)">
+      <div class="brand-block-inner">
+        <div class="brand-3d">
+          <div class="brand-3d-bg" style="background:linear-gradient(135deg,#1a1500,#2a2200)"></div>
+          <canvas class="brand-canvas" data-brand="maties" data-count="2"></canvas>
+        </div>
+        <div class="brand-info">
+          <div class="brand-logo-text" style="color:#E6C800">Maties</div>
+          <div class="brand-sub" style="color:#E6C800">Delightful Puffs & Ball Puff Chips</div>
+          <div class="brand-desc">Experience the irresistible crunch of Maties, offering you a delightful range of puffs and ball puff chips that melt in your mouth. Perfect for snacking anytime, anywhere.</div>
+          <div class="brand-range">
+            <div class="brand-range-label">Available Flavours</div>
+            <div class="brand-tags">
+              <span class="btag" style="color:#E6C800;border-color:rgba(230,200,0,.3)">Original</span>
+              <span class="btag" style="color:#E6C800;border-color:rgba(230,200,0,.3)">Cheese</span>
+              <span class="btag" style="color:#E6C800;border-color:rgba(230,200,0,.3)">Spicy</span>
+              <span class="btag" style="color:#E6C800;border-color:rgba(230,200,0,.3)">BBQ</span>
+            </div>
+          </div>
+          <a class="brand-cta" href="wholesale.html" style="color:#E6C800">Order Wholesale</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Snack Haven -->
+    <div class="brand-block reveal-scale" style="transition-delay:.08s;border-color:rgba(204,41,41,.2)">
+      <div class="brand-block-inner flip">
+        <div class="brand-3d">
+          <div class="brand-3d-bg" style="background:linear-gradient(135deg,#1a0000,#2a0808)"></div>
+          <canvas class="brand-canvas" data-brand="snackhaven" data-count="2"></canvas>
+        </div>
+        <div class="brand-info">
+          <div class="brand-logo-text" style="color:#CC2929">Snack Haven</div>
+          <div class="brand-sub" style="color:#CC2929">Flavorful Potato Chips Extravaganza</div>
+          <div class="brand-desc">Explore a world of flavors with Snack Haven's diverse range of potato chips. From classic salt to exotic spices, every chip is a burst of deliciousness.</div>
+          <div class="brand-range">
+            <div class="brand-range-label">Available Flavours</div>
+            <div class="brand-tags">
+              <span class="btag" style="color:#CC2929;border-color:rgba(204,41,41,.3)">Classic Salt</span>
+              <span class="btag" style="color:#CC2929;border-color:rgba(204,41,41,.3)">Chilli</span>
+              <span class="btag" style="color:#CC2929;border-color:rgba(204,41,41,.3)">BBQ</span>
+              <span class="btag" style="color:#CC2929;border-color:rgba(204,41,41,.3)">Cheese</span>
+              <span class="btag" style="color:#CC2929;border-color:rgba(204,41,41,.3)">Sour Cream</span>
+            </div>
+          </div>
+          <a class="brand-cta" href="wholesale.html" style="color:#CC2929">Order Wholesale</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Big Loaf Co -->
+    <div class="brand-block reveal-scale" style="transition-delay:.16s;border-color:rgba(0,174,204,.2)">
+      <div class="brand-block-inner">
+        <div class="brand-3d">
+          <div class="brand-3d-bg" style="background:linear-gradient(135deg,#001520,#002030)"></div>
+          <canvas class="brand-canvas" data-brand="bigloaf" data-count="2"></canvas>
+        </div>
+        <div class="brand-info">
+          <div class="brand-logo-text" style="color:#00AECC">The Big Loaf Co.</div>
+          <div class="brand-sub" style="color:#00AECC">Artisan Bread for Every Occasion</div>
+          <div class="brand-desc">Experience the mouthwatering sensation of The Big Loaf Co. artisan bread. Baked to perfection, our breads are the ideal companion for your meals and snacks.</div>
+          <div class="brand-range">
+            <div class="brand-range-label">Available Varieties</div>
+            <div class="brand-tags">
+              <span class="btag" style="color:#00AECC;border-color:rgba(0,174,204,.3)">White Bread</span>
+              <span class="btag" style="color:#00AECC;border-color:rgba(0,174,204,.3)">Brown Bread</span>
+              <span class="btag" style="color:#00AECC;border-color:rgba(0,174,204,.3)">Whole Wheat</span>
+              <span class="btag" style="color:#00AECC;border-color:rgba(0,174,204,.3)">Seeded</span>
+            </div>
+          </div>
+          <a class="brand-cta" href="wholesale.html" style="color:#00AECC">Order Wholesale</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crispy Cut -->
+    <div class="brand-block reveal-scale" style="transition-delay:.24s;border-color:rgba(0,153,187,.2)">
+      <div class="brand-block-inner flip">
+        <div class="brand-3d">
+          <div class="brand-3d-bg" style="background:linear-gradient(135deg,#001218,#001e28)"></div>
+          <canvas class="brand-canvas" data-brand="crispycut" data-count="2"></canvas>
+        </div>
+        <div class="brand-info">
+          <div class="brand-logo-text" style="color:#0099BB">Crispy Cut</div>
+          <div class="brand-sub" style="color:#0099BB">Crunchy Potato Chips Perfection</div>
+          <div class="brand-desc">Indulge in the ultimate crunch with Crispy Cut potato chips. Masterfully thin, these chips are a perfect snack for any chip lover seeking that satisfying snap.</div>
+          <div class="brand-range">
+            <div class="brand-range-label">Available Flavours</div>
+            <div class="brand-tags">
+              <span class="btag" style="color:#0099BB;border-color:rgba(0,153,187,.3)">Original</span>
+              <span class="btag" style="color:#0099BB;border-color:rgba(0,153,187,.3)">Sour Cream & Onion</span>
+              <span class="btag" style="color:#0099BB;border-color:rgba(0,153,187,.3)">Peri-Peri</span>
+              <span class="btag" style="color:#0099BB;border-color:rgba(0,153,187,.3)">Salt & Vinegar</span>
+            </div>
+          </div>
+          <a class="brand-cta" href="wholesale.html" style="color:#0099BB">Order Wholesale</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Corn Snacker -->
+    <div class="brand-block reveal-scale" style="transition-delay:.32s;border-color:rgba(244,162,28,.2)">
+      <div class="brand-block-inner">
+        <div class="brand-3d">
+          <div class="brand-3d-bg" style="background:linear-gradient(135deg,#0a0800,#1a1200)"></div>
+          <canvas class="brand-canvas" data-brand="cornsnacker" data-count="2"></canvas>
+        </div>
+        <div class="brand-info">
+          <div class="brand-logo-text" style="color:#F4A21C">Corn Snacker</div>
+          <div class="brand-sub" style="color:#F4A21C">Maize Chips with a Twist</div>
+          <div class="brand-desc">Enjoy the extraordinary blend of flavors in Corn Snacker, where crispy meets delicious to redefine your snacking experience. A bold snack for all ages.</div>
+          <div class="brand-range">
+            <div class="brand-range-label">Available Flavours</div>
+            <div class="brand-tags">
+              <span class="btag" style="color:#F4A21C;border-color:rgba(244,162,28,.3)">Salted</span>
+              <span class="btag" style="color:#F4A21C;border-color:rgba(244,162,28,.3)">Chilli</span>
+              <span class="btag" style="color:#F4A21C;border-color:rgba(244,162,28,.3)">BBQ</span>
+              <span class="btag" style="color:#F4A21C;border-color:rgba(244,162,28,.3)">Cheese</span>
+            </div>
+          </div>
+          <a class="brand-cta" href="wholesale.html" style="color:#F4A21C">Order Wholesale</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Junior Snacker -->
+    <div class="brand-block reveal-scale" style="transition-delay:.4s;border-color:rgba(232,99,26,.2)">
+      <div class="brand-block-inner flip">
+        <div class="brand-3d">
+          <div class="brand-3d-bg" style="background:linear-gradient(135deg,#1a0500,#2a0a00)"></div>
+          <canvas class="brand-canvas" data-brand="juniorsnacker" data-count="2"></canvas>
+        </div>
+        <div class="brand-info">
+          <div class="brand-logo-text" style="color:#E8631A">Junior Snacker</div>
+          <div class="brand-sub" style="color:#E8631A">Kid-Friendly Maize Chips</div>
+          <div class="brand-desc">Your little ones will go wild for Junior Snacker's maize chips, hand-crafted to satisfy young snack lovers and inspire a perfect taste for budding snack enthusiasts.</div>
+          <div class="brand-range">
+            <div class="brand-range-label">Available Flavours</div>
+            <div class="brand-tags">
+              <span class="btag" style="color:#E8631A;border-color:rgba(232,99,26,.3)">Cheese</span>
+              <span class="btag" style="color:#E8631A;border-color:rgba(232,99,26,.3)">Original</span>
+              <span class="btag" style="color:#E8631A;border-color:rgba(232,99,26,.3)">BBQ</span>
+            </div>
+          </div>
+          <a class="brand-cta" href="wholesale.html" style="color:#E8631A">Order Wholesale</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crack-a-Snack — full width -->
+    <div class="brand-block reveal-scale" style="transition-delay:.48s;grid-column:span 2;border-color:rgba(76,154,42,.2)">
+      <div class="brand-block-inner" style="grid-template-columns:1fr 2fr">
+        <div class="brand-3d">
+          <div class="brand-3d-bg" style="background:linear-gradient(135deg,#081400,#102000)"></div>
+          <canvas class="brand-canvas" data-brand="crackasnack" data-count="3"></canvas>
+        </div>
+        <div class="brand-info" style="padding:3rem">
+          <div class="brand-logo-text" style="color:#4C9A2A;font-size:3rem">Crack-a-Snack</div>
+          <div class="brand-sub" style="color:#4C9A2A">Maize Chips Full of Flavour</div>
+          <div class="brand-desc">Enjoy the unique taste of Crack-a-Snack, where crispy maize chips meet your mouth to deliver an explosion of bold flavour. A must-try for all snack enthusiasts across South Africa.</div>
+          <div class="brand-range" style="margin-top:1rem">
+            <div class="brand-range-label">Available Flavours</div>
+            <div class="brand-tags">
+              <span class="btag" style="color:#4C9A2A;border-color:rgba(76,154,42,.3)">Original</span>
+              <span class="btag" style="color:#4C9A2A;border-color:rgba(76,154,42,.3)">Chilli</span>
+              <span class="btag" style="color:#4C9A2A;border-color:rgba(76,154,42,.3)">Cheese</span>
+              <span class="btag" style="color:#4C9A2A;border-color:rgba(76,154,42,.3)">BBQ</span>
+              <span class="btag" style="color:#4C9A2A;border-color:rgba(76,154,42,.3)">Tomato</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap">
+            <a class="btn-primary" href="wholesale.html" style="background:#4C9A2A;box-shadow:0 0 28px rgba(76,154,42,.3)">Order Wholesale →</a>
+            <a class="btn-ghost" href="index.html#contact">Enquire</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CATALOGUE GRID -->
+<section class="catalogue-section">
+  <div class="section-tag reveal">Full Catalogue</div>
+  <h2 class="reveal">ALL PRODUCTS</h2>
+  <div class="filter-bar">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" onclick="filterCat('all',this)">All</button>
+    <button class="filter-btn" onclick="filterCat('puff',this)">Puff Chips</button>
+    <button class="filter-btn" onclick="filterCat('potato',this)">Potato Chips</button>
+    <button class="filter-btn" onclick="filterCat('maize',this)">Maize Chips</button>
+    <button class="filter-btn" onclick="filterCat('bread',this)">Bread</button>
+  </div>
+  <div class="cat-grid" id="cat-grid">
+    <!-- Maties range -->
+    <div class="cat-card" data-cat="puff" style="border-color:rgba(230,200,0,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#1a1500,#2a2000)"><canvas class="mini-canvas" data-brand="maties" data-offset="0"></canvas><div class="cat-badge" style="background:#E6C800;color:#000">Puff</div></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#E6C800">Maties Original</div><div class="cat-name">Classic Original Puff</div><div class="cat-flavours"><span class="fchip">50g</span><span class="fchip">100g</span><span class="fchip">200g</span></div></div>
+    </div>
+    <div class="cat-card" data-cat="puff" style="border-color:rgba(230,200,0,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#1a1200,#2a1e00)"><canvas class="mini-canvas" data-brand="maties" data-offset="1"></canvas></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#E6C800">Maties Cheese</div><div class="cat-name">Cheese Puff Ball</div><div class="cat-flavours"><span class="fchip">50g</span><span class="fchip">100g</span></div></div>
+    </div>
+    <div class="cat-card" data-cat="puff" style="border-color:rgba(230,200,0,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#1a1000,#2a1800)"><canvas class="mini-canvas" data-brand="maties" data-offset="2"></canvas><div class="cat-badge" style="background:#E6C800;color:#000">New!</div></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#E6C800">Maties Spicy</div><div class="cat-name">Spicy Ball Puff</div><div class="cat-flavours"><span class="fchip">50g</span><span class="fchip">100g</span></div></div>
+    </div>
+    <!-- Snack Haven range -->
+    <div class="cat-card" data-cat="potato" style="border-color:rgba(204,41,41,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#1a0000,#2a0808)"><canvas class="mini-canvas" data-brand="snackhaven" data-offset="0"></canvas><div class="cat-badge" style="background:#CC2929;color:#fff">Bestseller</div></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#CC2929">Snack Haven</div><div class="cat-name">Classic Salt Potato Chips</div><div class="cat-flavours"><span class="fchip">75g</span><span class="fchip">150g</span><span class="fchip">300g</span></div></div>
+    </div>
+    <div class="cat-card" data-cat="potato" style="border-color:rgba(204,41,41,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#180000,#280808)"><canvas class="mini-canvas" data-brand="snackhaven" data-offset="1"></canvas></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#CC2929">Snack Haven Chilli</div><div class="cat-name">Chilli Potato Chips</div><div class="cat-flavours"><span class="fchip">75g</span><span class="fchip">150g</span></div></div>
+    </div>
+    <!-- Big Loaf -->
+    <div class="cat-card" data-cat="bread" style="border-color:rgba(0,174,204,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#001520,#002030)"><canvas class="mini-canvas" data-brand="bigloaf" data-offset="0"></canvas></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#00AECC">The Big Loaf Co.</div><div class="cat-name">White Bread 700g</div><div class="cat-flavours"><span class="fchip">700g</span><span class="fchip">1000g</span></div></div>
+    </div>
+    <div class="cat-card" data-cat="bread" style="border-color:rgba(0,174,204,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#001020,#001a28)"><canvas class="mini-canvas" data-brand="bigloaf" data-offset="1"></canvas></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#00AECC">The Big Loaf Co.</div><div class="cat-name">Brown Bread 700g</div><div class="cat-flavours"><span class="fchip">700g</span><span class="fchip">1000g</span></div></div>
+    </div>
+    <!-- Crispy Cut -->
+    <div class="cat-card" data-cat="potato" style="border-color:rgba(0,153,187,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#001218,#001e28)"><canvas class="mini-canvas" data-brand="crispycut" data-offset="0"></canvas></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#0099BB">Crispy Cut</div><div class="cat-name">Original Crunchy Chips</div><div class="cat-flavours"><span class="fchip">75g</span><span class="fchip">150g</span></div></div>
+    </div>
+    <div class="cat-card" data-cat="potato" style="border-color:rgba(0,153,187,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#001018,#001520)"><canvas class="mini-canvas" data-brand="crispycut" data-offset="1"></canvas></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#0099BB">Crispy Cut Peri</div><div class="cat-name">Peri-Peri Crunchy Chips</div><div class="cat-flavours"><span class="fchip">75g</span><span class="fchip">150g</span></div></div>
+    </div>
+    <!-- Corn Snacker -->
+    <div class="cat-card" data-cat="maize" style="border-color:rgba(244,162,28,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#0a0800,#1a1200)"><canvas class="mini-canvas" data-brand="cornsnacker" data-offset="0"></canvas></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#F4A21C">Corn Snacker</div><div class="cat-name">Original Maize Chips</div><div class="cat-flavours"><span class="fchip">75g</span><span class="fchip">150g</span></div></div>
+    </div>
+    <div class="cat-card" data-cat="maize" style="border-color:rgba(244,162,28,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#080600,#180f00)"><canvas class="mini-canvas" data-brand="cornsnacker" data-offset="1"></canvas><div class="cat-badge" style="background:#F4A21C;color:#000">Spicy!</div></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#F4A21C">Corn Snacker</div><div class="cat-name">Chilli Maize Chips</div><div class="cat-flavours"><span class="fchip">75g</span><span class="fchip">150g</span></div></div>
+    </div>
+    <!-- Junior Snacker -->
+    <div class="cat-card" data-cat="maize" style="border-color:rgba(232,99,26,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#1a0500,#2a0a00)"><canvas class="mini-canvas" data-brand="juniorsnacker" data-offset="0"></canvas><div class="cat-badge" style="background:#E8631A;color:#fff">Kids</div></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#E8631A">Junior Snacker</div><div class="cat-name">Cheese Maize Chips</div><div class="cat-flavours"><span class="fchip">40g</span><span class="fchip">75g</span></div></div>
+    </div>
+    <div class="cat-card" data-cat="maize" style="border-color:rgba(232,99,26,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#180400,#280800)"><canvas class="mini-canvas" data-brand="juniorsnacker" data-offset="1"></canvas></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#E8631A">Junior Snacker</div><div class="cat-name">Original Maize Chips</div><div class="cat-flavours"><span class="fchip">40g</span><span class="fchip">75g</span></div></div>
+    </div>
+    <!-- Crack-a-Snack -->
+    <div class="cat-card" data-cat="maize" style="border-color:rgba(76,154,42,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#081400,#102000)"><canvas class="mini-canvas" data-brand="crackasnack" data-offset="0"></canvas></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#4C9A2A">Crack-a-Snack</div><div class="cat-name">Original Maize Chips</div><div class="cat-flavours"><span class="fchip">75g</span><span class="fchip">150g</span></div></div>
+    </div>
+    <div class="cat-card" data-cat="maize" style="border-color:rgba(76,154,42,.15)">
+      <div class="cat-visual" style="background:linear-gradient(135deg,#061000,#0f1c00)"><canvas class="mini-canvas" data-brand="crackasnack" data-offset="1"></canvas><div class="cat-badge" style="background:#4C9A2A;color:#fff">Popular</div></div>
+      <div class="cat-body"><div class="cat-brand" style="color:#4C9A2A">Crack-a-Snack</div><div class="cat-name">Chilli Maize Chips</div><div class="cat-flavours"><span class="fchip">75g</span><span class="fchip">150g</span></div></div>
+    </div>
+  </div>
+</section>
+
+<div style="text-align:center;padding:5rem 3rem;background:var(--surface);border-top:1px solid var(--border)">
+  <div class="section-tag reveal" style="justify-content:center">Ready to Stock Up?</div>
+  <h2 class="reveal" style="margin-bottom:1.2rem">ORDER WHOLESALE<br><span style="color:var(--orange)">TODAY</span></h2>
+  <p class="reveal" style="color:var(--muted);max-width:460px;margin:0 auto 2.5rem;font-size:.95rem;line-height:1.7">Contact our sales team for wholesale pricing, minimum order quantities, and delivery schedules across South Africa.</p>
+  <div class="reveal" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+    <a class="btn-primary" href="wholesale.html">Start Wholesale Order</a>
+    <a class="btn-teal" href="https://wa.me/27817153423">WhatsApp Us</a>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo"><img src="uploads/logo-1776757362469.png" alt="SUZ Foods"></a>
+  <p class="footer-copy">© 2026 SUZ Foods International Food Brands Africa CC</p>
+  <div class="footer-links"><a href="about.html">About</a><a href="products.html">Products</a><a href="wholesale.html">Wholesale</a><a href="index.html#contact">Contact</a></div>
+</footer>
+
+<script>
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('preloader').classList.add('hidden'),1600));
+const $c=document.getElementById('cursor'),$r=document.getElementById('cursor-ring'),$g=document.getElementById('cursor-glow');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function tick(){$c.style.left=mx+'px';$c.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;$r.style.left=rx+'px';$r.style.top=ry+'px';$g.style.left=mx+'px';$g.style.top=my+'px';requestAnimationFrame(tick);})();
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+const ham=document.getElementById('hamburger'),mob=document.getElementById('mobile-menu');
+ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.toggle('open');});
+function closeMobile(){ham.classList.remove('open');mob.classList.remove('open');}
+
+const BRANDS={
+  maties:{c1:0xE6C800,c2:0xFFFFFF,c3:0xC8AA00,top:0xFFFFFF},
+  snackhaven:{c1:0xCC2929,c2:0xFFD700,c3:0xAA1818,top:0xFFD700},
+  bigloaf:{c1:0x00AECC,c2:0xF4A21C,c3:0x008FA8,top:0xF4A21C},
+  crispycut:{c1:0x0099BB,c2:0xFFFFFF,c3:0x007A99,top:0xFFFFFF},
+  cornsnacker:{c1:0x3D1F00,c2:0xF4A21C,c3:0x2A1500,top:0xF4A21C},
+  juniorsnacker:{c1:0xE8631A,c2:0xFFD700,c3:0xC04E10,top:0xFFD700},
+  crackasnack:{c1:0x4C9A2A,c2:0xFFD700,c3:0x3A7A1E,top:0xFFD700},
+};
+function makeBag(THREE,key,scale=1){
+  const b=BRANDS[key]||BRANDS.maties;
+  const g=new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.BoxGeometry(1.5*scale,2.2*scale,.55*scale),new THREE.MeshPhongMaterial({color:b.c1,shininess:90,emissive:b.c1,emissiveIntensity:.05})));
+  [-0.65*scale,0.65*scale].forEach(x=>{const s=new THREE.Mesh(new THREE.BoxGeometry(.18*scale,2.2*scale,.56*scale),new THREE.MeshPhongMaterial({color:b.c3,shininess:60}));s.position.x=x;g.add(s);});
+  const top=new THREE.Mesh(new THREE.BoxGeometry(1.2*scale,.35*scale,.65*scale),new THREE.MeshPhongMaterial({color:b.top,shininess:120}));
+  top.position.y=1.28*scale;g.add(top);
+  const bot=new THREE.Mesh(new THREE.BoxGeometry(1.3*scale,.2*scale,.6*scale),new THREE.MeshPhongMaterial({color:b.c3,shininess:80}));
+  bot.position.y=-1.15*scale;g.add(bot);
+  return g;
+}
+
+function makeBagScene(canvas,brand,count,zPos=6,animated=true){
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(50,1,.1,40);
+  camera.position.z=zPos;
+  function resize(){const w=canvas.clientWidth||300,h=canvas.clientHeight||300;renderer.setSize(w,h,false);renderer.setPixelRatio(Math.min(devicePixelRatio,2));camera.aspect=w/h;camera.updateProjectionMatrix();}
+  setTimeout(resize,400); window.addEventListener('resize',()=>setTimeout(resize,100));
+  const bags=[];
+  for(let i=0;i<(count||1);i++){
+    const g=makeBag(THREE,brand,1+i*.15);
+    if(count>1){g.position.x=(i-((count-1)/2))*2.2;g.position.y=(i%2)*.5;g.rotation.y=i*.3;}
+    bags.push(g); scene.add(g);
+  }
+  scene.add(new THREE.AmbientLight(0xffffff,.45));
+  const l1=new THREE.PointLight(0xffffff,5,20);l1.position.set(3,4,6);scene.add(l1);
+  const l2=new THREE.PointLight(0xF4A21C,3,15);l2.position.set(-3,-2,5);scene.add(l2);
+  if(!animated){renderer.render(scene,camera);return;}
+  const clock=new THREE.Clock();
+  (function anim(){
+    requestAnimationFrame(anim);
+    const t=clock.getElapsedTime();
+    bags.forEach((g,i)=>{g.rotation.y=t*.6+i*.5;g.rotation.x=Math.sin(t*.4+i)*.15;g.position.y=(count>1?(i%2)*.5:0)+Math.sin(t*.5+i*.8)*.18;});
+    renderer.render(scene,camera);
+  })();
+}
+
+// Brand canvases
+document.querySelectorAll('.brand-canvas').forEach((c,i)=>{
+  const brand=c.dataset.brand, count=+(c.dataset.count||2);
+  setTimeout(()=>makeBagScene(c,brand,count,count>2?9:7),500+i*60);
+});
+
+// Mini canvases
+document.querySelectorAll('.mini-canvas').forEach((c,i)=>{
+  const brand=c.dataset.brand, offset=+(c.dataset.offset||0);
+  const renderer=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});
+  const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(50,1,.1,20);
+  camera.position.z=4.5;
+  function resize(){const w=c.clientWidth||160,h=c.clientHeight||160;renderer.setSize(w,h,false);renderer.setPixelRatio(Math.min(devicePixelRatio,2));camera.aspect=w/h;camera.updateProjectionMatrix();}
+  setTimeout(resize,700+i*20); window.addEventListener('resize',()=>setTimeout(resize,100));
+  const g=makeBag(THREE,brand,.95); scene.add(g);
+  scene.add(new THREE.AmbientLight(0xffffff,.5));
+  const l=new THREE.PointLight(0xffffff,5,15);l.position.set(3,3,5);scene.add(l);
+  const clock=new THREE.Clock();
+  (function anim(){requestAnimationFrame(anim);const t=clock.getElapsedTime()+offset*1.5;g.rotation.y=t*.7;g.rotation.x=Math.sin(t*.4)*.2;g.position.y=Math.sin(t*.6)*.18;renderer.render(scene,camera);})();
+});
+
+// Filter
+function filterCat(cat,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.cat-card').forEach(card=>{
+    card.style.display=(cat==='all'||card.dataset.cat===cat)?'':'none';
+  });
+}
+
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.08});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

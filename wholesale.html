@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wholesale — SUZ Holdings</title>
+<link rel="stylesheet" href="shared.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<style>
+/* ─── FUN SNACK ANIMATIONS ─── */
+@keyframes floatSnacks {
+0%, 100% { transform: translateY(0) rotate(0deg); }
+25% { transform: translateY(-15px) rotate(3deg); }
+50% { transform: translateY(-8px) rotate(-2deg); }
+75% { transform: translateY(-20px) rotate(2deg); }
+}
+@keyframes bounceIn {
+0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+50% { transform: scale(1.2) rotate(10deg); }
+100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes wiggle {
+0%, 100% { transform: rotate(-3deg); }
+50% { transform: rotate(3deg); }
+}
+@keyframes pop {
+0%, 100% { transform: scale(1); }
+50% { transform: scale(1.15); }
+}
+@keyframes shimmer {
+0% { background-position: -200% center; }
+100% { background-position: 200% center; }
+}
+@keyframes confettiFall {
+0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ─── WHOLESALE HERO ─── */
+.ws-hero {
+min-height: 70vh; display: flex; flex-direction: column;
+justify-content: flex-end; padding: 10rem 3rem 5rem;
+position: relative; overflow: hidden;
+background: linear-gradient(135deg, var(--surface) 0%, var(--bg) 50%, var(--navy) 100%);
+}
+.ws-hero::before {
+content: '🍿 🍟 🥨 🧀 🍪';
+position: absolute;
+top: 10%;
+left: -10%;
+font-size: 3rem;
+opacity: 0.08;
+animation: floatSnacks 8s ease-in-out infinite;
+white-space: nowrap;
+letter-spacing: 4rem;
+}
+.ws-hero::after {
+content: '🌟 ✨ 🎯 🎉 🎊';
+position: absolute;
+bottom: 20%;
+right: -5%;
+font-size: 2.5rem;
+opacity: 0.06;
+animation: floatSnacks 10s ease-in-out infinite reverse;
+white-space: nowrap;
+letter-spacing: 3rem;
+}
+#ws-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ws-hero-overlay {
+position: absolute; inset: 0;
+background: radial-gradient(ellipse at 20% 60%, rgba(255,159,28,0.15) 0%, transparent 55%),
+radial-gradient(ellipse at 80% 20%, rgba(46,196,182,0.1) 0%, transparent 50%),
+linear-gradient(to top, rgba(10,12,20,0.98) 30%, rgba(10,12,20,0.3) 100%);
+}
+.ws-hero-content { position: relative; z-index: 2; max-width: 800px; }
+.ws-hero-content .hero-tag {
+display: inline-flex; align-items: center; gap: 0.75rem;
+font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+color: var(--orange); margin-bottom: 1.6rem;
+opacity: 0; animation: fadeUp 0.7s 0.4s forwards;
+background: rgba(255,159,28,0.1);
+padding: 0.5rem 1rem;
+border-radius: 50px;
+border: 1px solid rgba(255,159,28,0.3);
+}
+.ws-hero-content .hero-tag::before { content:'🍿'; font-size: 1rem; }
+.ws-hero-content .hero-tag::after { content:'✨'; font-size: 0.9rem; margin-left: 0.3rem; }
+.ws-hero-content h1 {
+font-family: 'Bebas Neue', sans-serif;
+font-size: clamp(4rem, 9vw, 8rem); line-height: 0.9; letter-spacing: 0.02em;
+opacity: 0; animation: fadeUp 0.9s 0.6s forwards;
+text-shadow: 0 0 60px rgba(255,159,28,0.3), 0 0 120px rgba(255,230,109,0.1);
+}
+.ws-hero-content h1 em {
+font-style: normal;
+background: linear-gradient(135deg, var(--orange), var(--yellow), var(--orange));
+background-size: 200% auto;
+-webkit-background-clip: text; -webkit-text-fill-color: transparent;
+animation: shimmer 3s linear infinite;
+display: inline-block;
+}
+.ws-hero-content h1 em::after {
+content: ' 🎉';
+-webkit-text-fill-color: initial;
+font-size: 0.5em;
+vertical-align: super;
+}
+.ws-hero-content p {
+color: var(--muted); font-size: 1.05rem; line-height: 1.85; max-width: 520px;
+margin-top: 1.6rem; opacity: 0; animation: fadeUp 0.9s 0.8s forwards;
+}
+
+/* ─── HOW IT WORKS ─── */
+.how-section { padding: 8rem 3rem; position: relative; overflow: hidden; }
+.how-section::before {
+content: '📦 📋 ✍️ 📞 📦';
+position: absolute;
+top: 5%;
+left: -5%;
+font-size: 2rem;
+opacity: 0.04;
+animation: floatSnacks 15s ease-in-out infinite;
+white-space: nowrap;
+letter-spacing: 8rem;
+}
+.how-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; margin-top: 4rem; position: relative; }
+.how-steps::before {
+content: ''; position: absolute; top: 28px; left: calc(12.5% + 16px); right: calc(12.5% + 16px);
+height: 3px; background: linear-gradient(90deg, var(--orange), var(--yellow), var(--orange), var(--teal), var(--orange));
+background-size: 300% 100%;
+animation: shimmer 4s linear infinite;
+z-index: 0;
+border-radius: 3px;
+}
+.step-item { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 1.5rem; position: relative; z-index: 1; }
+.step-item:nth-child(1) .step-num::before { content: '📝'; font-size: 1.6rem; }
+.step-item:nth-child(2) .step-num::before { content: '📞'; font-size: 1.6rem; }
+.step-item:nth-child(3) .step-num::before { content: '💰'; font-size: 1.6rem; }
+.step-item:nth-child(4) .step-num::before { content: '🎉'; font-size: 1.6rem; }
+.step-num {
+width: 64px; height: 64px; border-radius: 50%;
+background: linear-gradient(135deg, var(--orange) 0%, var(--yellow) 50%, var(--orange2) 100%);
+display: flex; align-items: center; justify-content: center;
+font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: #000;
+margin-bottom: 1.5rem; flex-shrink: 0;
+box-shadow: 0 4px 20px var(--glow-orange), 0 0 40px rgba(255,159,28,0.2);
+transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
+position: relative;
+}
+.step-num span { display: none; }
+.step-item:hover .step-num {
+transform: scale(1.15) rotate(5deg);
+box-shadow: 0 8px 30px var(--glow-orange), 0 0 60px rgba(255,159,28,0.3);
+animation: pop 0.5s ease;
+}
+.step-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.03em; margin-bottom: 0.6rem; }
+.step-title::after { content: ''; display: block; width: 30px; height: 3px; background: var(--orange); margin: 0.5rem auto 0; border-radius: 2px; }
+.step-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.75; }
+
+/* ─── BENEFITS ─── */
+.benefits-section { padding: 7rem 3rem; background: var(--surface); border-top: 1px solid var(--border); position: relative; overflow: hidden; }
+.benefits-section::after {
+content: '⭐ ✨ 💫 🌟 💥';
+position: absolute;
+bottom: 10%;
+right: -5%;
+font-size: 2rem;
+opacity: 0.05;
+animation: floatSnacks 12s ease-in-out infinite reverse;
+white-space: nowrap;
+letter-spacing: 5rem;
+}
+.benefits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 4rem; }
+.benefit-card {
+display: flex; gap: 1.5rem; align-items: flex-start; padding: 2rem;
+border: 1px solid var(--border); border-radius: 12px;
+transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+background: linear-gradient(145deg, var(--surface), var(--surface2));
+position: relative;
+overflow: hidden;
+}
+.benefit-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: linear-gradient(135deg, rgba(255,159,28,0) 0%, rgba(255,159,28,0.05) 100%);
+opacity: 0;
+transition: opacity 0.3s;
+}
+.benefit-card:hover {
+border-color: var(--orange);
+transform: translateY(-8px) rotate(1deg);
+box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(255,159,28,0.1);
+}
+.benefit-card:hover::before { opacity: 1; }
+.benefit-icon {
+width: 56px; height: 56px; flex-shrink: 0;
+background: linear-gradient(135deg, var(--orange), var(--yellow));
+border-radius: 14px;
+display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+box-shadow: 0 4px 15px rgba(255,159,28,0.3);
+transition: transform 0.3s;
+}
+.benefit-card:hover .benefit-icon { transform: scale(1.1) rotate(-5deg); animation: pop 0.5s ease; }
+.benefit-text { position: relative; z-index: 1; }
+.benefit-text .bt-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.03em; margin-bottom: 0.5rem; }
+.benefit-text .bt-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.75; }
+
+/* ─── PRICING TIERS ─── */
+.pricing-section { padding: 8rem 3rem; position: relative; }
+.pricing-section::before {
+content: '🏆 🎯 💎 🏅 🎖️';
+position: absolute;
+top: 15%;
+left: -10%;
+font-size: 2rem;
+opacity: 0.04;
+animation: floatSnacks 20s ease-in-out infinite;
+white-space: nowrap;
+letter-spacing: 6rem;
+}
+.pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin-top: 4rem; }
+.price-card {
+border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+position: relative;
+background: linear-gradient(145deg, var(--surface), var(--bg));
+}
+.price-card:hover {
+border-color: var(--orange);
+transform: translateY(-12px) scale(1.02);
+box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 40px rgba(255,159,28,0.15);
+}
+.price-card.featured {
+border-color: var(--orange);
+box-shadow: 0 0 50px rgba(255,159,28,0.25), 0 10px 30px rgba(0,0,0,0.3);
+transform: scale(1.05);
+}
+.price-card.featured:hover {
+transform: scale(1.08) translateY(-15px);
+box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 60px rgba(255,159,28,0.3);
+}
+.price-header { padding: 2.5rem 2rem; background: var(--surface); position: relative; }
+.price-card.featured .price-header {
+background: linear-gradient(135deg, rgba(255,159,28,0.2) 0%, rgba(255,230,109,0.1) 50%, rgba(46,196,182,0.05) 100%);
+}
+.price-badge {
+position: absolute; top: 1rem; right: 1rem;
+background: linear-gradient(135deg, var(--orange), var(--yellow));
+color: #000; font-size: 0.7rem;
+font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+padding: 0.35rem 0.8rem; border-radius: 50px;
+box-shadow: 0 4px 15px rgba(255,159,28,0.3);
+animation: pop 2s ease-in-out infinite;
+}
+.price-badge {
+  position: absolute; top: 1rem; right: 1rem;
+  background: var(--orange); color: #000; font-size: 0.65rem;
+  font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.25rem 0.6rem; border-radius: 2px;
+}
+.price-tier { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.03em; color: var(--orange); margin-bottom: 0.5rem; }
+.price-tier::before {
+content: '🎁';
+margin-right: 0.5rem;
+}
+.price-card.featured .price-tier::before { content: '🏆'; }
+.price-card:nth-child(3) .price-tier::before { content: '💎'; }
+.price-amount { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; line-height: 1; margin-bottom: 0.3rem; }
+.price-amount span { font-size: 1.2rem; vertical-align: super; margin-right: 2px; }
+.price-desc { font-size: 0.85rem; color: var(--muted); }
+.price-body { padding: 2rem; }
+.price-features { list-style: none; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+.price-features li { font-size: 0.9rem; display: flex; gap: 0.75rem; align-items: flex-start; }
+.price-features li::before { content: '✓'; color: var(--orange); flex-shrink: 0; font-weight: 700; font-size: 1.1rem; }
+.price-features li.dim { color: var(--muted); }
+.price-features li.dim::before { content: '○'; color: var(--muted); font-size: 1rem; }
+.price-cta {
+  display: block; text-align: center; padding: 0.9rem;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 2px;
+  font-family: 'DM Sans', sans-serif; font-weight: 600;
+  font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--white); text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.price-cta:hover { background: var(--orange); border-color: var(--orange); color: #000; }
+.price-card.featured .price-cta { background: var(--orange); border-color: var(--orange); color: #000; }
+.price-card.featured .price-cta:hover { background: var(--yellow); border-color: var(--yellow); }
+
+/* ─── ORDER FORM ─── */
+.order-section {
+padding: 8rem 3rem; background: var(--surface);
+border-top: 1px solid var(--border);
+position: relative;
+overflow: hidden;
+}
+.order-section::before {
+content: '📬 ✉️ 📦 🚚 🎉';
+position: absolute;
+bottom: 5%;
+left: -5%;
+font-size: 2rem;
+opacity: 0.04;
+animation: floatSnacks 18s ease-in-out infinite reverse;
+white-space: nowrap;
+letter-spacing: 6rem;
+}
+.order-inner { display: grid; grid-template-columns: 1fr 1.6fr; gap: 6rem; align-items: start; position: relative; z-index: 1; }
+.order-info h2 { margin-bottom: 1.2rem; }
+.order-info p { color: var(--muted); line-height: 1.75; font-size: 0.95rem; margin-bottom: 2rem; }
+.info-box {
+background: linear-gradient(145deg, var(--bg), var(--surface2));
+border: 1px solid var(--border); border-radius: 12px;
+padding: 1.5rem; margin-bottom: 1.5rem;
+transition: all 0.3s;
+}
+.info-box:hover {
+border-color: var(--orange);
+transform: translateX(5px);
+box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.info-box .ib-label { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+.info-box:nth-child(1) .ib-label::before { content: '📍'; }
+.info-box:nth-child(2) .ib-label::before { content: '📞'; }
+.info-box:nth-child(3) .ib-label::before { content: '⏰'; }
+.info-box .ib-val { font-size: 0.9rem; line-height: 1.65; color: var(--muted); }
+
+.order-form { display: flex; flex-direction: column; gap: 1rem; }
+.form-section-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.05em;
+  color: var(--orange); margin-top: 0.5rem; padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.form-group label { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.form-group input, .form-group textarea, .form-group select {
+  background: var(--bg); border: 1px solid var(--border); color: var(--white);
+  padding: 0.85rem 1rem; border-radius: 2px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none;
+  transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--orange); }
+.form-group textarea { resize: vertical; min-height: 100px; }
+.form-group select option { background: #0f0f18; }
+.form-group input[type=checkbox] { width: auto; accent-color: var(--orange); }
+.checkbox-row { flex-direction: row; align-items: center; gap: 0.8rem; }
+.checkbox-row label { font-size: 0.85rem; letter-spacing: 0; text-transform: none; color: var(--muted); cursor: pointer; }
+
+/* Product selector */
+.product-selector { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.75rem; }
+.prod-check {
+border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem;
+font-size: 0.8rem; color: var(--muted); cursor: pointer;
+transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+display: flex; align-items: center; gap: 0.5rem;
+user-select: none;
+background: var(--bg);
+}
+.prod-check:hover {
+border-color: var(--orange);
+color: var(--white);
+transform: translateY(-3px) scale(1.02);
+box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+.prod-check.selected {
+border-color: var(--orange);
+background: linear-gradient(135deg, rgba(255,159,28,0.15), rgba(255,230,109,0.08));
+color: var(--white);
+transform: translateY(-3px);
+box-shadow: 0 8px 25px rgba(255,159,28,0.2);
+}
+.prod-check::before { font-size: 1.1rem; transition: all 0.2s; }
+.prod-check:nth-child(1)::before { content: '🥔'; }
+.prod-check:nth-child(2)::before { content: '🌽'; }
+.prod-check:nth-child(3)::before { content: '🥜'; }
+.prod-check:nth-child(4)::before { content: '☁️'; }
+.prod-check:nth-child(5)::before { content: '🥩'; }
+.prod-check:nth-child(6)::before { content: '🥨'; }
+.prod-check:nth-child(7)::before { content: '🍬'; }
+.prod-check:nth-child(8)::before { content: '🎁'; }
+.prod-check:nth-child(9)::before { content: '📦'; }
+.prod-check.selected::before { transform: scale(1.2); animation: pop 0.3s ease; }
+
+.submit-btn {
+background: linear-gradient(135deg, var(--orange) 0%, var(--yellow) 100%);
+color: #000; border: none; padding: 1.1rem 2.5rem;
+font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.85rem;
+letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; border-radius: 50px;
+transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); align-self: flex-start;
+box-shadow: 0 4px 20px var(--glow-orange), 0 0 40px rgba(255,159,28,0.2);
+margin-top: 0.5rem;
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+.submit-btn::after {
+content: '🚀';
+font-size: 1.2rem;
+transition: transform 0.3s;
+}
+.submit-btn:hover {
+background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%);
+transform: translateY(-4px) scale(1.02);
+box-shadow: 0 8px 30px var(--glow-orange), 0 0 60px rgba(255,159,28,0.3);
+}
+.submit-btn:hover::after {
+transform: translateX(5px) rotate(-10deg);
+}
+.submit-btn:active {
+transform: translateY(-2px) scale(0.98);
+}
+#ws-success {
+display: none;
+background: linear-gradient(135deg, rgba(255,159,28,0.1) 0%, rgba(46,196,182,0.05) 100%);
+border: 2px solid var(--orange);
+border-radius: 12px;
+padding: 1.5rem;
+position: relative;
+overflow: hidden;
+}
+#ws-success::before {
+content: '🎉';
+position: absolute;
+top: 0.5rem;
+right: 0.5rem;
+font-size: 2rem;
+opacity: 0.3;
+animation: floatSnacks 3s ease-in-out infinite;
+}
+#ws-success strong {
+color: var(--orange);
+display: block;
+margin-bottom: 0.5rem;
+font-size: 1rem;
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+#ws-success strong::before {
+content: '✅';
+font-size: 1.2rem;
+}
+#ws-success p { color: var(--muted); font-size: 0.9rem; margin: 0; }
+
+/* ─── FAQ ─── */
+.faq-section { padding: 8rem 3rem; position: relative; overflow: hidden; }
+.faq-section::before {
+content: '❓ 💡 ✨ 🤔 💭';
+position: absolute;
+top: 10%;
+right: -5%;
+font-size: 2rem;
+opacity: 0.04;
+animation: floatSnacks 14s ease-in-out infinite;
+white-space: nowrap;
+letter-spacing: 4rem;
+}
+.faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 4rem; }
+.faq-item { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: all 0.3s; }
+.faq-item:hover { border-color: rgba(255,159,28,0.3); }
+.faq-item.open { border-color: var(--orange); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.faq-q {
+padding: 1.5rem; font-weight: 600; font-size: 0.95rem;
+cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+transition: all 0.3s;
+background: linear-gradient(145deg, var(--surface), var(--surface2));
+}
+.faq-q:hover {
+background: linear-gradient(145deg, rgba(255,159,28,0.05), var(--surface2));
+}
+.faq-q::before {
+content: '❓';
+margin-right: 0.75rem;
+font-size: 1.2rem;
+}
+.faq-item:nth-child(2) .faq-q::before { content: '🚚'; }
+.faq-item:nth-child(3) .faq-q::before { content: '💳'; }
+.faq-item:nth-child(4) .faq-q::before { content: '🏷️'; }
+.faq-item:nth-child(5) .faq-q::before { content: '📍'; }
+.faq-item:nth-child(6) .faq-q::before { content: '📦'; }
+.faq-toggle {
+color: var(--orange);
+font-size: 1.4rem;
+transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+flex-shrink: 0;
+background: rgba(255,159,28,0.1);
+width: 32px;
+height: 32px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 50%;
+}
+.faq-item.open .faq-toggle {
+transform: rotate(45deg) scale(1.1);
+background: var(--orange);
+color: #000;
+}
+.faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; }
+.faq-item.open .faq-a { max-height: 200px; }
+.faq-a-inner { padding: 0 1.5rem 1.5rem; font-size: 0.9rem; color: var(--muted); line-height: 1.8; }
+
+@media (max-width: 900px) {
+  .how-steps { grid-template-columns: 1fr 1fr; }
+  .how-steps::before { display: none; }
+  .benefits-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .order-inner { grid-template-columns: 1fr; }
+  .faq-grid { grid-template-columns: 1fr; }
+  .product-selector { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .how-steps { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .product-selector { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="preloader">
+  <img src="uploads/logo-1776757362469.png" alt="SUZ Foods" style="height:90px;opacity:0;animation:fadeUp .8s .3s forwards">
+  <div class="pre-bar-wrap"><div class="pre-bar"></div></div>
+  <div class="pre-tag">Wholesale · B2B Orders</div>
+</div>
+<div id="cursor"></div><div id="cursor-ring"></div><div id="cursor-glow"></div>
+
+<a class="wa-float" href="https://wa.me/27817153423" target="_blank" title="WhatsApp Us">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+<nav id="nav">
+  <a class="nav-logo" href="index.html"><img src="uploads/logo-1776757362469.png" alt="SUZ Foods"></a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="about.html">Our Story</a></li>
+    <li><a href="wholesale.html" class="active">Wholesale</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="#order">Start Order</a>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html" onclick="closeMobile()">Home</a>
+  <a href="products.html" onclick="closeMobile()">Products</a>
+  <a href="about.html" onclick="closeMobile()">Our Story</a>
+  <a href="wholesale.html" onclick="closeMobile()">Wholesale</a>
+  <a href="index.html#contact" onclick="closeMobile()">Contact</a>
+  <a href="#order" class="mob-cta" onclick="closeMobile()">Start Order →</a>
+</div>
+
+<!-- HERO -->
+<div class="ws-hero">
+  <canvas id="ws-canvas"></canvas>
+  <div class="ws-hero-overlay"></div>
+  <div class="ws-hero-content">
+<span class="hero-tag">B2B Wholesale Partnership</span>
+<h1>STOCK YOUR<br>SHELVES WITH<br><em>THE BEST SNACKS</em></h1>
+<p>Join hundreds of retailers across South Africa who rely on SUZ for their wholesale snack supply. From Maties puff chips to Crack-a-Snack maize chips — we've got flavours that fly off the shelves! 🍿</p>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Flexible Orders <span>✦</span></span>
+    <span class="marquee-item">Nationwide Delivery <span>✦</span></span>
+    <span class="marquee-item">500+ SKUs <span>✦</span></span>
+    <span class="marquee-item">Competitive Pricing <span>✦</span></span>
+    <span class="marquee-item">Dedicated Account Manager <span>✦</span></span>
+    <span class="marquee-item">24h Turnaround <span>✦</span></span>
+    <span class="marquee-item">Flexible Orders <span>✦</span></span>
+    <span class="marquee-item">Nationwide Delivery <span>✦</span></span>
+    <span class="marquee-item">500+ SKUs <span>✦</span></span>
+    <span class="marquee-item">Competitive Pricing <span>✦</span></span>
+    <span class="marquee-item">Dedicated Account Manager <span>✦</span></span>
+    <span class="marquee-item">24h Turnaround <span>✦</span></span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="section-tag reveal">Simple Process</div>
+  <h2 class="reveal">HOW IT<br>WORKS</h2>
+  <div class="how-steps">
+<div class="step-item reveal">
+<div class="step-num"><span>01</span></div>
+<div class="step-title">Submit Enquiry</div>
+<div class="step-desc">Tell us about your business and what snacks your customers crave. Chips, puffs, bread — we've got it all!</div>
+</div>
+<div class="step-item reveal" style="transition-delay:0.1s">
+<div class="step-num"><span>02</span></div>
+<div class="step-title">We Get In Touch</div>
+<div class="step-desc">Your dedicated snack specialist will call you within 24 hours to discuss your wholesale needs.</div>
+</div>
+<div class="step-item reveal" style="transition-delay:0.2s">
+<div class="step-num"><span>03</span></div>
+<div class="step-title">Custom Quote</div>
+<div class="step-desc">Get tailored pricing for Maties, Snack Haven, Crack-a-Snack & more. The more you order, the more you save!</div>
+</div>
+<div class="step-item reveal" style="transition-delay:0.3s">
+<div class="step-num"><span>04</span></div>
+<div class="step-title">Stock & Sell</div>
+<div class="step-desc">Your first order arrives fresh and ready. Watch your customers grab a flavour and come back for more!</div>
+</div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="benefits-section">
+  <div class="section-tag reveal">Partner Benefits</div>
+  <h2 class="reveal">WHY RETAIL<br>PARTNERS CHOOSE US</h2>
+  <div class="benefits-grid">
+    <div class="benefit-card reveal">
+<div class="benefit-icon">💰</div>
+<div class="benefit-text">
+<div class="bt-title">Sweet Wholesale Pricing</div>
+<div class="bt-desc">Tiered pricing that rewards your appetite for success! The more Maties, Crack-a-Snack & Snack Haven you order, the tastier your margins get. No hidden fees, just honest snack economics.</div>
+</div>
+</div>
+<div class="benefit-card reveal" style="transition-delay:0.1s">
+<div class="benefit-icon">🚚</div>
+<div class="benefit-text">
+<div class="bt-title">Fresh Delivery Nationwide</div>
+<div class="bt-desc">From Johannesburg to Cape Town, we deliver the crunch to all 9 provinces. Track your chips, puffs & bread from our warehouse straight to your shelf!</div>
+</div>
+</div>
+<div class="benefit-card reveal" style="transition-delay:0.2s">
+<div class="benefit-icon">📦</div>
+<div class="benefit-text">
+<div class="bt-title">Snack-Size Minimum Orders</div>
+<div class="bt-desc">Start small, dream big! Whether you're a corner spaza or a supermarket chain, we've got order sizes that work for every business appetite.</div>
+</div>
+</div>
+<div class="benefit-card reveal" style="transition-delay:0.3s">
+<div class="benefit-icon">🤝</div>
+<div class="benefit-text">
+<div class="bt-title">Your Snack Sidekick</div>
+<div class="bt-desc">Every partner gets a personal snack specialist who knows your business inside out. Think of them as your flavour consultant!</div>
+</div>
+</div>
+<div class="benefit-card reveal" style="transition-delay:0.4s">
+<div class="benefit-icon">🔄</div>
+<div class="benefit-text">
+<div class="bt-title">Easy Reorder Magic</div>
+<div class="bt-desc">Running low on Maties? WhatsApp us, email us, or use our form. Auto-replenishment available for qualifying partners — never run out of crunch!</div>
+</div>
+</div>
+<div class="benefit-card reveal" style="transition-delay:0.5s">
+<div class="benefit-icon">📊</div>
+<div class="benefit-text">
+<div class="bt-title">Snack Market Insights</div>
+<div class="bt-desc">Get the scoop on what's hot! See which flavours are flying off shelves nationwide and stock what your customers are craving.</div>
+</div>
+</div>
+  </div>
+</section>
+
+<!-- PRICING TIERS -->
+<section class="pricing-section">
+  <div class="section-tag reveal">Wholesale Tiers</div>
+  <h2 class="reveal">PRICING<br>TIERS</h2>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="price-header">
+        <div class="price-tier">Starter</div>
+        <div class="price-amount"><span>R</span>2,500</div>
+        <div class="price-desc">Minimum monthly order value</div>
+      </div>
+      <div class="price-body">
+        <ul class="price-features">
+          <li>Access to 200+ product lines</li>
+          <li>Standard delivery (3–5 days)</li>
+          <li>Email order processing</li>
+          <li>Monthly product newsletter</li>
+          <li class="dim">Dedicated account manager</li>
+          <li class="dim">Priority fulfilment</li>
+          <li class="dim">Custom pack sizes</li>
+        </ul>
+        <a class="price-cta" href="#order">Get Started →</a>
+      </div>
+    </div>
+    <div class="price-card featured reveal" style="transition-delay:0.1s">
+      <div class="price-badge">Most Popular</div>
+      <div class="price-header">
+        <div class="price-tier">Growth</div>
+        <div class="price-amount"><span>R</span>10,000</div>
+        <div class="price-desc">Minimum monthly order value</div>
+      </div>
+      <div class="price-body">
+        <ul class="price-features">
+          <li>Access to 400+ product lines</li>
+          <li>Express delivery (1–2 days)</li>
+          <li>Phone & email order processing</li>
+          <li>Dedicated account manager</li>
+          <li>Priority fulfilment</li>
+          <li>Quarterly sales review</li>
+          <li class="dim">Custom pack sizes</li>
+        </ul>
+        <a class="price-cta" href="#order">Get Started →</a>
+      </div>
+    </div>
+    <div class="price-card reveal" style="transition-delay:0.2s">
+      <div class="price-header">
+        <div class="price-tier">Enterprise</div>
+        <div class="price-amount">Custom</div>
+        <div class="price-desc">Tailored to your business volume</div>
+      </div>
+      <div class="price-body">
+        <ul class="price-features">
+          <li>Full 500+ product catalogue</li>
+          <li>Same-day delivery options</li>
+          <li>All ordering channels</li>
+          <li>Senior account manager</li>
+          <li>Top priority fulfilment</li>
+          <li>Custom pack sizes available</li>
+          <li>Exclusive brand partnerships</li>
+        </ul>
+        <a class="price-cta" href="#order">Contact Us →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER FORM -->
+<section class="order-section" id="order">
+  <div class="order-inner">
+    <div class="order-info">
+      <div class="section-tag reveal">Get Started</div>
+      <h2 class="reveal">START YOUR<br>WHOLESALE<br><em style="font-style:normal;background:linear-gradient(135deg,var(--orange),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">ORDER</em></h2>
+      <p class="reveal">Complete the form and one of our team members will contact you within 24 business hours with your personalised wholesale catalogue and pricing.</p>
+      <div class="info-box reveal">
+        <div class="ib-label">Office Address</div>
+        <div class="ib-val">2051 Erma Street, Andeon, 0183<br>Pretoria, South Africa</div>
+      </div>
+      <div class="info-box reveal">
+        <div class="ib-label">Contact Details</div>
+        <div class="ib-val">
+          📞 <a href="tel:0123720201" style="color:var(--orange);text-decoration:none">(012) 372-0201</a><br>
+          💬 <a href="https://wa.me/27817153423" style="color:var(--orange);text-decoration:none">081 715 3423</a> (WhatsApp)<br>
+          ✉️ <a href="mailto:sales@suzholdings.co.za" style="color:var(--orange);text-decoration:none">sales@suzholdings.co.za</a><br>
+          ✉️ <a href="mailto:services@suzholdings.co.za" style="color:var(--orange);text-decoration:none">services@suzholdings.co.za</a>
+        </div>
+      </div>
+      <div class="info-box reveal">
+        <div class="ib-label">Business Hours</div>
+        <div class="ib-val">Monday – Friday: 8:00am – 5:00pm<br>Saturday: 9:00am – 1:00pm</div>
+      </div>
+    </div>
+    <form class="order-form reveal" onsubmit="handleOrder(event)" id="ws-form">
+      <div class="form-section-title">Business Details</div>
+      <div class="form-row">
+        <div class="form-group"><label>Business Name *</label><input type="text" placeholder="Your business name" required></div>
+        <div class="form-group"><label>Business Type *</label>
+          <select required>
+            <option value="">Select type...</option>
+            <option>Retail Store</option>
+            <option>Supermarket / Grocery</option>
+            <option>Petrol Station / Forecourt</option>
+            <option>Tuck Shop / Spaza</option>
+            <option>Restaurant / Café</option>
+            <option>Event / Catering</option>
+            <option>Online Retailer</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Contact Name *</label><input type="text" placeholder="Full name" required></div>
+        <div class="form-group"><label>Email Address *</label><input type="email" placeholder="you@business.com" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone Number *</label><input type="tel" placeholder="+27 XX XXX XXXX" required></div>
+        <div class="form-group"><label>Province</label>
+          <select>
+            <option value="">Select province...</option>
+            <option>Gauteng</option><option>Western Cape</option><option>KwaZulu-Natal</option>
+            <option>Eastern Cape</option><option>Limpopo</option><option>Mpumalanga</option>
+            <option>North West</option><option>Free State</option><option>Northern Cape</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section-title" style="margin-top:0.5rem">Product Interests</div>
+      <div class="form-group"><label>Which categories interest you?</label>
+        <div class="product-selector">
+          <div class="prod-check selected" onclick="this.classList.toggle('selected')">Chips & Crisps</div>
+          <div class="prod-check selected" onclick="this.classList.toggle('selected')">Corn Snacks</div>
+          <div class="prod-check" onclick="this.classList.toggle('selected')">Nuts & Seeds</div>
+          <div class="prod-check" onclick="this.classList.toggle('selected')">Puffed Snacks</div>
+          <div class="prod-check" onclick="this.classList.toggle('selected')">Meat Snacks</div>
+          <div class="prod-check" onclick="this.classList.toggle('selected')">Baked & Light</div>
+          <div class="prod-check" onclick="this.classList.toggle('selected')">Sweets & Candy</div>
+          <div class="prod-check" onclick="this.classList.toggle('selected')">Mixed Assorted</div>
+          <div class="prod-check" onclick="this.classList.toggle('selected')">All Products</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Estimated Monthly Volume</label>
+          <select>
+            <option>Under R2,500</option>
+            <option>R2,500 – R10,000</option>
+            <option selected>R10,000 – R50,000</option>
+            <option>R50,000 – R200,000</option>
+            <option>R200,000+</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Preferred Tier</label>
+          <select>
+            <option>Starter</option>
+            <option selected>Growth</option>
+            <option>Enterprise</option>
+            <option>Not Sure — Advise Me</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Additional Notes</label>
+        <textarea placeholder="Tell us about any specific product requirements, existing suppliers, or anything else we should know..."></textarea>
+      </div>
+      <div class="form-group checkbox-row">
+        <input type="checkbox" id="agreeCheck" required>
+        <label for="agreeCheck">I agree to be contacted by a SUZ representative regarding my wholesale enquiry.</label>
+      </div>
+      <button type="submit" class="submit-btn">Submit Wholesale Enquiry →</button>
+      <div id="ws-success">
+        <strong>✓ Enquiry Received!</strong>
+        <p>Thank you! A member of our wholesale team will contact you within 24 business hours with your personalised catalogue and pricing.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="section-tag reveal">Got Questions?</div>
+  <h2 class="reveal">FREQUENTLY<br>ASKED</h2>
+  <div class="faq-grid">
+    <div class="faq-item reveal" onclick="toggleFaq(this)">
+      <div class="faq-q">What is the minimum order quantity? <span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Minimum order values start at R2,500 for our Starter tier. There are no unit minimum per SKU — you can mix and match across our full catalogue to reach the minimum.</div></div>
+    </div>
+    <div class="faq-item reveal" onclick="toggleFaq(this)">
+      <div class="faq-q">How long does delivery take? <span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Standard delivery takes 3–5 business days. Growth and Enterprise partners receive 1–2 day express delivery. Same-day options are available in Gauteng and Cape Town for qualifying orders.</div></div>
+    </div>
+    <div class="faq-item reveal" onclick="toggleFaq(this)">
+      <div class="faq-q">Do you offer credit accounts? <span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Yes. 30-day credit accounts are available for partners who have completed 3 successful orders and passed our standard credit check. Talk to your account manager for details.</div></div>
+    </div>
+    <div class="faq-item reveal" onclick="toggleFaq(this)">
+      <div class="faq-q">Can I order specific brands? <span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Absolutely. You can order any specific brand or SKU from our catalogue. Your account manager will provide a full product list with current availability and lead times.</div></div>
+    </div>
+    <div class="faq-item reveal" onclick="toggleFaq(this)">
+      <div class="faq-q">What areas do you deliver to? <span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">We deliver nationwide across all 9 provinces of South Africa. Remote or rural areas may attract a delivery surcharge — your account manager will confirm this upfront.</div></div>
+    </div>
+    <div class="faq-item reveal" onclick="toggleFaq(this)">
+      <div class="faq-q">What happens if products are damaged? <span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">All deliveries are inspected before dispatch. If goods arrive damaged, contact us within 48 hours with photos and we will arrange a replacement or credit on your next order.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="footer-logo"><img src="uploads/logo-1776757362469.png" alt="SUZ Foods"></a>
+  <p class="footer-copy">© 2026 SUZ Foods International Food Brands Africa CC · (012) 372-0201 · sales@suzholdings.co.za</p>
+  <div class="footer-links">
+    <a href="about.html">About</a><a href="products.html">Products</a>
+    <a href="wholesale.html">Wholesale</a><a href="index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('preloader').classList.add('hidden'),1500));
+const $c=document.getElementById('cursor'),$r=document.getElementById('cursor-ring'),$g=document.getElementById('cursor-glow');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function tick(){$c.style.left=mx+'px';$c.style.top=my+'px';rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;$r.style.left=rx+'px';$r.style.top=ry+'px';$g.style.left=mx+'px';$g.style.top=my+'px';requestAnimationFrame(tick);})();
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+const ham=document.getElementById('hamburger'),mob=document.getElementById('mobile-menu');
+ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.toggle('open');});
+function closeMobile(){ham.classList.remove('open');mob.classList.remove('open');}
+
+// Hero 3D
+(function(){
+  const canvas=document.getElementById('ws-canvas');
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(55,1,0.1,80);
+  camera.position.z=18;
+  function resize(){
+    const w=canvas.clientWidth||window.innerWidth,h=canvas.clientHeight||window.innerHeight*0.7;
+    renderer.setSize(w,h,false);renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+    camera.aspect=w/h;camera.updateProjectionMatrix();
+  }
+  setTimeout(resize,200);window.addEventListener('resize',()=>setTimeout(resize,100));
+  const colors=[[0xc0392b,0xff7043],[0xd4860a,0xffd740],[0x1a6b3a,0x69f0ae],[0x7b2d8b,0xce93d8],[0x1a5580,0x4fc3f7],[0xb84a0f,0xff8a65]];
+  const bags=[];
+  for(let i=0;i<16;i++){
+    const [c1,c2]=colors[i%colors.length];
+    const g=new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(1.4,2,0.5),new THREE.MeshPhongMaterial({color:c1,emissive:c1,emissiveIntensity:0.07,shininess:90})));
+    const t=new THREE.Mesh(new THREE.BoxGeometry(1.1,0.3,0.6),new THREE.MeshPhongMaterial({color:c2,shininess:120}));
+    t.position.y=1.1; g.add(t);
+    g.position.set((Math.random()-.5)*44,(Math.random()-.5)*24,(Math.random()-.5)*12-6);
+    g.rotation.set(Math.random()*Math.PI*2,Math.random()*Math.PI*2,Math.random()*Math.PI*2);
+    g.scale.setScalar(0.5+Math.random()*1.5);
+    bags.push({g,vy:(Math.random()-.5)*0.006,vx:(Math.random()-.5)*0.004,rx:(Math.random()-.5)*0.009,ry:(Math.random()-.5)*0.011,rz:(Math.random()-.5)*0.007,foff:Math.random()*Math.PI*2,fspd:0.3+Math.random()*0.5});
+    scene.add(g);
+  }
+  scene.add(new THREE.AmbientLight(0xffffff,0.3));
+  const l1=new THREE.PointLight(0xff6020,4,35);l1.position.set(5,5,9);scene.add(l1);
+  const l2=new THREE.PointLight(0xffd700,2.5,28);l2.position.set(-8,-4,7);scene.add(l2);
+  let mx3=0,my3=0;
+  document.addEventListener('mousemove',e=>{mx3=(e.clientX/innerWidth-.5)*2;my3=(e.clientY/innerHeight-.5)*2;});
+  const clock=new THREE.Clock();
+  (function anim(){
+    requestAnimationFrame(anim);
+    const t=clock.getElapsedTime();
+    bags.forEach(b=>{
+      b.g.rotation.x+=b.rx;b.g.rotation.y+=b.ry;b.g.rotation.z+=b.rz;
+      b.g.position.x+=b.vx;b.g.position.y+=b.vy;
+      b.g.position.y+=Math.sin(t*b.fspd+b.foff)*0.008;
+      if(b.g.position.x>24)b.g.position.x=-24;if(b.g.position.x<-24)b.g.position.x=24;
+      if(b.g.position.y>14)b.g.position.y=-14;if(b.g.position.y<-14)b.g.position.y=14;
+    });
+    camera.position.x+=(mx3*1.5-camera.position.x)*0.02;
+    camera.position.y+=(-my3-camera.position.y)*0.02;
+    camera.lookAt(scene.position);
+    renderer.render(scene,camera);
+  })();
+})();
+
+// Reveal
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } });
+},{threshold:0.08});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el=>io.observe(el));
+
+// FAQ
+function toggleFaq(item){
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));
+  if(!wasOpen) item.classList.add('open');
+}
+
+// Form
+function handleOrder(e){
+  e.preventDefault();
+  document.getElementById('ws-form').style.opacity='0.4';
+  document.getElementById('ws-form').style.pointerEvents='none';
+  document.getElementById('ws-success').style.display='block';
+  document.getElementById('ws-success').scrollIntoView({behavior:'smooth'});
+  window.scrollBy({top:200,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
