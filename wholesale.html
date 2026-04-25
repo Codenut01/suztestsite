@@ -41,26 +41,26 @@
 min-height: 70vh; display: flex; flex-direction: column;
 justify-content: flex-end; padding: 10rem 3rem 5rem;
 position: relative; overflow: hidden;
-background: linear-gradient(135deg, var(--surface) 0%, var(--bg) 50%, var(--navy) 100%);
+background: var(--bg);
 }
 .ws-hero::before {
-content: '🍿 🍟 🥨 🧀 🍪';
+content: '🌴 🌿 🍃 🌻 🦜 🍌';
 position: absolute;
 top: 10%;
 left: -10%;
 font-size: 3rem;
-opacity: 0.08;
+opacity: 0.1;
 animation: floatSnacks 8s ease-in-out infinite;
 white-space: nowrap;
 letter-spacing: 4rem;
 }
 .ws-hero::after {
-content: '🌟 ✨ 🎯 🎉 🎊';
+content: '🍿 🍟 🌽 🧀 🥨 🎉';
 position: absolute;
 bottom: 20%;
 right: -5%;
 font-size: 2.5rem;
-opacity: 0.06;
+opacity: 0.08;
 animation: floatSnacks 10s ease-in-out infinite reverse;
 white-space: nowrap;
 letter-spacing: 3rem;
@@ -505,18 +505,52 @@ color: #000;
 .faq-a-inner { padding: 0 1.5rem 1.5rem; font-size: 0.9rem; color: var(--muted); line-height: 1.8; }
 
 @media (max-width: 900px) {
-  .how-steps { grid-template-columns: 1fr 1fr; }
-  .how-steps::before { display: none; }
-  .benefits-grid { grid-template-columns: 1fr; }
-  .pricing-grid { grid-template-columns: 1fr; }
-  .order-inner { grid-template-columns: 1fr; }
-  .faq-grid { grid-template-columns: 1fr; }
-  .product-selector { grid-template-columns: 1fr 1fr; }
+.how-steps { grid-template-columns: 1fr 1fr; }
+.how-steps::before { display: none; }
+.benefits-grid { grid-template-columns: 1fr; }
+.pricing-grid { grid-template-columns: 1fr; }
+.order-inner { grid-template-columns: 1fr; }
+.faq-grid { grid-template-columns: 1fr; }
+.product-selector { grid-template-columns: 1fr 1fr; }
+/* Mobile wholesale adjustments */
+.ws-hero { min-height: auto; padding: 8rem 1.5rem 4rem; }
+.ws-hero-content h1 { font-size: clamp(2.5rem, 10vw, 5rem); }
+.ws-hero-content p { max-width: 100%; font-size: 0.95rem; }
+.how-section { padding: 5rem 1.5rem; }
+.step-num { width: 50px; height: 50px; }
+.step-num::before { font-size: 1.2rem; }
+.step-title { font-size: 1.2rem; }
+.benefits-section { padding: 4rem 1.5rem; }
+.benefit-card { padding: 1.5rem; }
+.pricing-section { padding: 5rem 1.5rem; }
+.price-card.featured { transform: scale(1); }
+.price-card.featured:hover { transform: scale(1.02) translateY(-10px); }
+.order-section { padding: 5rem 1.5rem; }
+.info-box { padding: 1.2rem; }
+.faq-section { padding: 5rem 1.5rem; }
 }
 @media (max-width: 600px) {
-  .how-steps { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
-  .product-selector { grid-template-columns: 1fr; }
+.how-steps { grid-template-columns: 1fr; }
+.form-row { grid-template-columns: 1fr; }
+.product-selector { grid-template-columns: 1fr; }
+/* Small screen adjustments */
+.ws-hero { padding: 7rem 1rem 3rem; }
+.ws-hero-content h1 { font-size: clamp(2rem, 12vw, 4rem); }
+.ws-hero-content .hero-tag { font-size: 0.65rem; padding: 0.4rem 0.8rem; }
+.step-item { padding: 1rem 0; }
+.step-num { width: 60px; height: 60px; }
+.price-card { margin: 0 -0.5rem; }
+.price-header { padding: 1.5rem; }
+.price-amount { font-size: 2.5rem; }
+.submit-btn { width: 100%; justify-content: center; }
+.form-group input, .form-group textarea, .form-group select { font-size: 16px; }
+}
+@media (max-width: 480px) {
+.ws-hero-content h1 { font-size: 2.2rem; }
+.price-tier { font-size: 1.4rem; }
+.price-features li { font-size: 0.85rem; }
+.prod-check { padding: 0.6rem 0.8rem; font-size: 0.75rem; }
+.faq-q { padding: 1.2rem; font-size: 0.9rem; }
 }
 </style>
 </head>
