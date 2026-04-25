@@ -9,22 +9,23 @@
 <style>
 /* PAGE HERO — full bleed story */
 .story-hero {
-  min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
-  position: relative; overflow: hidden;
+min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+position: relative; overflow: hidden;
+background: var(--bg);
 }
 .story-hero-left {
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 10rem 3rem 6rem; position: relative; z-index: 2;
+display: flex; flex-direction: column; justify-content: flex-end;
+padding: 10rem 3rem 6rem; position: relative; z-index: 2;
 }
 .story-hero-right {
-  position: relative; overflow: hidden;
-  background: var(--surface);
+position: relative; overflow: hidden;
+background: linear-gradient(135deg, var(--surface2), var(--surface));
 }
 #story-canvas { width: 100%; height: 100%; display: block; position: absolute; inset: 0; }
 .story-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to right, var(--bg) 0%, transparent 40%);
-  z-index: 1;
+position: absolute; inset: 0;
+background: linear-gradient(to right, var(--bg) 0%, transparent 40%);
+z-index: 1;
 }
 .story-hero-left .hero-tag {
   display: inline-flex; align-items: center; gap: 0.75rem;
@@ -143,18 +144,43 @@ background: linear-gradient(135deg, var(--orange), var(--yellow));
 .about-cta p { color: var(--muted); font-size: 1rem; max-width: 440px; margin: 0 auto 2.5rem; line-height: 1.7; }
 
 @media (max-width: 900px) {
-  .story-hero { grid-template-columns: 1fr; }
-  .story-hero-right { height: 50vh; }
-  .timeline-inner { grid-template-columns: 1fr; }
-  .timeline-line { display: none; }
-  .tl-item.left { grid-column: 1; text-align: left; }
-  .values-grid { grid-template-columns: 1fr 1fr; }
-  .mission-band { flex-direction: column; gap: 3rem; }
-  .numbers-grid { grid-template-columns: 1fr 1fr; }
+.story-hero { grid-template-columns: 1fr; }
+.story-hero-right { height: 40vh; }
+.story-hero-left { padding: 7rem 1.5rem 4rem; }
+.timeline-inner { grid-template-columns: 1fr; }
+.timeline-line { display: none; }
+.tl-item.left { grid-column: 1; text-align: left; }
+.values-grid { grid-template-columns: 1fr 1fr; }
+.mission-band { flex-direction: column; gap: 3rem; padding: 5rem 1.5rem; }
+.numbers-grid { grid-template-columns: 1fr 1fr; }
+/* Mobile about page adjustments */
+.story-hero-left h1 { font-size: clamp(2.5rem, 10vw, 5rem); }
+.tl-year { font-size: 2.5rem; }
+.tl-title { font-size: 1.3rem; }
+.value-card { padding: 1.5rem; }
+.val-num { font-size: 3rem; }
+.about-cta { padding: 4rem 1.5rem; }
 }
 @media (max-width: 600px) {
-  .values-grid { grid-template-columns: 1fr; }
-  .numbers-grid { grid-template-columns: 1fr 1fr; }
+.values-grid { grid-template-columns: 1fr; }
+.numbers-grid { grid-template-columns: 1fr 1fr; }
+/* Small screen adjustments */
+.story-hero-right { height: 35vh; }
+.story-hero-left { padding: 6rem 1rem 3rem; }
+.story-hero-left h1 { font-size: clamp(2rem, 12vw, 4rem); }
+.story-hero-left p { font-size: 0.95rem; }
+.timeline-section { padding: 4rem 1rem; }
+.tl-year { font-size: 2rem; }
+.mission-badge-big { width: 140px; height: 140px; }
+.mission-badge-big .big-num { font-size: 3rem; }
+.values-section { padding: 4rem 1rem; }
+.numbers-section { padding: 4rem 1rem; }
+.big-stat { font-size: 3rem; }
+}
+@media (max-width: 480px) {
+.numbers-grid { grid-template-columns: 1fr; }
+.big-stat { font-size: 3.5rem; }
+.mission-text blockquote { font-size: clamp(1.5rem, 8vw, 2rem); }
 }
 </style>
 </head>
@@ -193,7 +219,16 @@ background: linear-gradient(135deg, var(--orange), var(--yellow));
 
 <!-- STORY HERO -->
 <div class="story-hero">
-  <div class="story-hero-left">
+<div class="vine vine-left"></div>
+<div class="vine vine-right"></div>
+<div class="falling-leaves">
+<div class="leaf leaf-1"></div>
+<div class="leaf leaf-2"></div>
+<div class="leaf leaf-3"></div>
+<div class="leaf leaf-4"></div>
+<div class="leaf leaf-5"></div>
+</div>
+<div class="story-hero-left">
     <span class="hero-tag">Est. 2000 · Family Owned</span>
     <h1>BUILT ON<br><em>PASSION</em><br>& TASTE</h1>
     <p>From humble beginnings to one of South Africa's most trusted wholesale snack distributors — our story is one of family, flavour, and relentless dedication to quality.</p>
