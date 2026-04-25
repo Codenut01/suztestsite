@@ -7,9 +7,9 @@
 <link rel="stylesheet" href="shared.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <style>
-.page-hero { min-height:55vh; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-end; padding:8rem 3rem 4rem; position:relative; overflow:hidden; }
-.page-hero-grid { position:absolute; inset:0; opacity:.035; background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px); background-size:60px 60px; }
-.page-hero-glow { position:absolute; inset:0; background:radial-gradient(ellipse at 60% 40%,rgba(244,162,28,.12) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(0,174,204,.08) 0%,transparent 50%); }
+.page-hero { min-height:55vh; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-end; padding:8rem 3rem 4rem; position:relative; overflow:hidden; background: var(--bg); }
+.page-hero-grid { position:absolute; inset:0; opacity:.15; background: repeating-conic-gradient(from 0deg, var(--yellow) 0deg 15deg, transparent 15deg 30deg); }
+.page-hero-glow { position:absolute; inset:0; background:radial-gradient(circle at 80% 20%, rgba(76, 175, 80, 0.2) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(255, 213, 0, 0.2) 0%, transparent 50%); }
 .breadcrumb { font-size:.72rem; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); margin-bottom:2rem; position:relative; z-index:1; opacity:0; animation:fadeUp .6s .2s forwards; }
 .breadcrumb a { color:var(--orange); text-decoration:none; }
 .page-hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(4rem,10vw,8rem); line-height:.9; position:relative; z-index:1; opacity:0; animation:fadeUp .9s .3s forwards; }
@@ -70,7 +70,36 @@
 .fchip { font-size:.63rem; padding:.2rem .5rem; background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:2px; color:var(--muted); }
 
 @media (max-width:1000px) { .brand-block-inner,.brand-block-inner.flip { grid-template-columns:1fr; } .brand-3d { min-height:220px; } .cat-grid { grid-template-columns:repeat(2,1fr); } }
-@media (max-width:600px) { .brands-showcase-grid { grid-template-columns:1fr; } .cat-grid { grid-template-columns:1fr 1fr; } }
+@media (max-width:768px) {
+.page-hero { min-height: 45vh; padding: 7rem 1.5rem 3rem; }
+.page-hero h1 { font-size: clamp(2.5rem, 10vw, 5rem); }
+.page-hero p { max-width: 100%; font-size: 0.95rem; }
+.brands-showcase { padding: 4rem 1.5rem; }
+.brand-block { margin: 0 -0.5rem; }
+.brand-logo-text { font-size: 2rem; }
+.catalogue-section { padding: 4rem 1.5rem; }
+.filter-bar { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 1rem; }
+.filter-btn { white-space: nowrap; }
+}
+@media (max-width:600px) {
+.brands-showcase-grid { grid-template-columns:1fr; }
+.cat-grid { grid-template-columns:1fr 1fr; }
+/* Product page mobile adjustments */
+.page-hero-grid { opacity: 0.08; }
+.brand-block-inner { min-height: auto; }
+.brand-info { padding: 1.5rem; }
+.cat-card { margin: 0 -0.25rem; }
+.cat-visual { height: 140px; }
+}
+@media (max-width:480px) {
+.page-hero h1 { font-size: 2.2rem; }
+.brand-logo-text { font-size: 1.6rem; }
+.cat-grid { grid-template-columns: 1fr; }
+.brand-block-inner.flip .brand-3d,
+.brand-block-inner .brand-3d { order: 0; }
+.brand-block-inner.flip .brand-info,
+.brand-block-inner .brand-info { order: 1; }
+}
 </style>
 </head>
 <body>
@@ -105,8 +134,17 @@
 
 <!-- PAGE HERO -->
 <div class="page-hero">
-  <div class="page-hero-grid"></div>
-  <div class="page-hero-glow"></div>
+<div class="vine vine-left"></div>
+<div class="vine vine-right"></div>
+<div class="falling-leaves">
+<div class="leaf leaf-1"></div>
+<div class="leaf leaf-2"></div>
+<div class="leaf leaf-3"></div>
+<div class="leaf leaf-4"></div>
+<div class="leaf leaf-5"></div>
+</div>
+<div class="page-hero-grid"></div>
+<div class="page-hero-glow"></div>
   <div class="breadcrumb"><a href="index.html">Home</a> / Products</div>
   <h1>THIS IS <span class="c-orange">SUZ</span><br><span class="c-teal">FOODS</span></h1>
   <p>Seven iconic South African snack and food brands — from irresistible puff chips to artisan bread — all under the SUZ family umbrella.</p>
@@ -420,13 +458,13 @@ ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.tog
 function closeMobile(){ham.classList.remove('open');mob.classList.remove('open');}
 
 const BRANDS={
-  maties:{c1:0xE6C800,c2:0xFFFFFF,c3:0xC8AA00,top:0xFFFFFF},
-  snackhaven:{c1:0xCC2929,c2:0xFFD700,c3:0xAA1818,top:0xFFD700},
-  bigloaf:{c1:0x00AECC,c2:0xF4A21C,c3:0x008FA8,top:0xF4A21C},
-  crispycut:{c1:0x0099BB,c2:0xFFFFFF,c3:0x007A99,top:0xFFFFFF},
-  cornsnacker:{c1:0x3D1F00,c2:0xF4A21C,c3:0x2A1500,top:0xF4A21C},
-  juniorsnacker:{c1:0xE8631A,c2:0xFFD700,c3:0xC04E10,top:0xFFD700},
-  crackasnack:{c1:0x4C9A2A,c2:0xFFD700,c3:0x3A7A1E,top:0xFFD700},
+maties:{c1:0xFFD500,c2:0xFFFFFF,c3:0xE6C800,top:0xFFFFFF},
+snackhaven:{c1:0xE63946,c2:0xFFD500,c3:0xCC2929,top:0xFFD500},
+bigloaf:{c1:0x00BFA5,c2:0xFF9800,c3:0x008F7A,top:0xFF9800},
+crispycut:{c1:0x0099BB,c2:0xFFFFFF,c3:0x007A99,top:0xFFFFFF},
+cornsnacker:{c1:0x3D1F00,c2:0xFF9800,c3:0x2A1500,top:0xFF9800},
+juniorsnacker:{c1:0xFF9800,c2:0xFFD500,c3:0xF57C00,top:0xFFD500},
+crackasnack:{c1:0x4CAF50,c2:0xFFD500,c3:0x3A7A1E,top:0xFFD500},
 };
 function makeBag(THREE,key,scale=1){
   const b=BRANDS[key]||BRANDS.maties;
