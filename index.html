@@ -12,10 +12,10 @@
 #hero-canvas { position:absolute; inset:0; width:100%; height:100%; }
 .hero-overlay {
 position:absolute; inset:0;
-background: radial-gradient(ellipse at 20% 50%, rgba(255,159,28,.15) 0%, transparent 55%),
-radial-gradient(ellipse at 80% 20%, rgba(46,196,182,.1) 0%, transparent 50%),
-radial-gradient(ellipse at 50% 100%, rgba(255,107,53,.05) 0%, transparent 50%),
-linear-gradient(to right, rgba(10,12,20,.95) 30%, rgba(10,12,20,.2) 100%);
+background: radial-gradient(ellipse at 20% 50%, rgba(255,152,0,.12) 0%, transparent 55%),
+radial-gradient(ellipse at 80% 20%, rgba(0,191,165,.08) 0%, transparent 50%),
+radial-gradient(ellipse at 50% 100%, rgba(76,175,80,.05) 0%, transparent 50%),
+linear-gradient(to right, rgba(255,251,223,.9) 30%, rgba(255,251,223,.3) 100%);
 }
 #hero::before {
 content: '🍿 🍟 🥨 🧀 🍪 🥜 🌽';
@@ -23,19 +23,19 @@ position: absolute;
 top: 5%;
 left: -5%;
 font-size: 2.5rem;
-opacity: 0.06;
+opacity: 0.08;
 animation: floatSnacks 12s ease-in-out infinite;
 white-space: nowrap;
 letter-spacing: 3rem;
 z-index: 1;
 }
 #hero::after {
-content: '✨ 🌟 💫 ⭐ 🎉 🎊';
+content: '🌿 🌴 🍃 🌱 🌻 🦜 🦋';
 position: absolute;
 bottom: 20%;
 right: -5%;
 font-size: 2rem;
-opacity: 0.05;
+opacity: 0.07;
 animation: floatSnacks 15s ease-in-out infinite reverse;
 white-space: nowrap;
 letter-spacing: 4rem;
@@ -45,13 +45,14 @@ z-index: 1;
 .hero-eyebrow {
 display:inline-flex; align-items:center; gap:.75rem;
 font-size:.75rem; letter-spacing:.2em; text-transform:uppercase;
-color:var(--orange); margin-bottom:1.6rem;
+color:var(--navy); margin-bottom:1.6rem;
 opacity:0; animation:bounceIn .8s .6s cubic-bezier(.34,1.56,.64,1) forwards;
-background: linear-gradient(135deg, rgba(255,159,28,0.15), rgba(255,230,109,0.08));
+background: linear-gradient(135deg, rgba(255,213,0,0.25), rgba(76,175,80,0.15));
 padding: 0.55rem 1.2rem;
 border-radius: 999px;
-border: 1.5px solid rgba(255,159,28,0.35);
+border: 2px solid var(--navy);
 font-weight: 700;
+box-shadow: 3px 3px 0 var(--navy);
 }
 .hero-eyebrow::before { content:'🍿'; font-size: 1.1rem; }
 .hero-eyebrow::after { content:'🔥'; font-size: 0.9rem; margin-left: 0.3rem; }
@@ -59,19 +60,26 @@ font-weight: 700;
 font-family:'Paytone One',sans-serif;
 font-size:clamp(4rem,10vw,9rem); line-height:.88; letter-spacing:-.02em;
 opacity:0; animation:fadeUp 1s 1s forwards;
-text-shadow: 0 0 80px rgba(255,159,28,0.25), 0 0 140px rgba(255,230,109,0.1);
+color: var(--navy);
+text-shadow: -2px -2px 0 rgba(27,94,32,0.1),
+2px -2px 0 rgba(27,94,32,0.1),
+-2px 2px 0 rgba(27,94,32,0.1),
+2px 2px 0 rgba(27,94,32,0.1),
+4px 4px 0 rgba(255,152,0,0.3);
+transform: rotate(-1deg);
+display: inline-block;
 }
 .hero-h1 .c-orange {
-color:var(--orange);
-background: linear-gradient(135deg, var(--orange), var(--yellow));
+color:var(--red);
+background: linear-gradient(135deg, var(--red), var(--orange));
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;
 animation: shimmer 4s linear infinite;
 background-size: 200% auto;
 }
 .hero-h1 .c-teal { color:var(--teal); }
-.hero-h1 .c-yellow { color:var(--yellow); }
-.hero-sub { margin-top:2rem; font-size:1.05rem; color:var(--muted); line-height:1.75; max-width:480px; opacity:0; animation:fadeUp .9s 1.2s forwards; }
+.hero-h1 .c-yellow { color:var(--orange); }
+.hero-sub { margin-top:2rem; font-size:1.05rem; color:var(--text-main); line-height:1.75; max-width:480px; opacity:0; animation:fadeUp .9s 1.2s forwards; }
 .hero-actions { margin-top:2.8rem; display:flex; gap:1rem; flex-wrap:wrap; opacity:0; animation:fadeUp .9s 1.4s forwards; }
 .hero-scroll { position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:.6rem; opacity:0; animation:fadeIn 1s 2s forwards; }
 .hero-scroll span { font-size:.62rem; letter-spacing:.22em; color:var(--muted); text-transform:uppercase; font-weight:700; }
@@ -86,16 +94,17 @@ background-size: 200% auto;
 .hero-blob-3 { width:300px; height:300px; background:rgba(230,57,70,0.05); top:30%; left:50%; animation:float 14s ease-in-out infinite reverse; }
 
 /* ─── BRANDS STRIP ─── */
-.brands-strip { padding:2.5rem 3rem; background:var(--surface); border-bottom:1px solid var(--border); }
+.brands-strip { padding:2.5rem 3rem; background:var(--surface2); border-bottom:2px dashed rgba(27,94,32,0.15); }
 .brands-strip-label { font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); text-align:center; margin-bottom:2rem; }
 .brands-logos { display:flex; gap:2rem; justify-content:center; align-items:center; flex-wrap:wrap; }
 .brand-logo-pill {
-background:var(--surface2); border:1px solid var(--border);
-border-radius:12px; padding:.8rem 1.8rem;
+background:var(--white); border:2px solid var(--border);
+border-radius:50px; padding:.8rem 1.8rem;
 font-family:'Bebas Neue',sans-serif; font-size:1.05rem; letter-spacing:.08em;
-color:var(--muted); transition:all .4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor:default;
+color:var(--navy); transition:all .4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor:default;
 position: relative;
 overflow: hidden;
+box-shadow: 3px 3px 0 rgba(27,94,32,0.1);
 }
 .brand-logo-pill:hover {
 border-color:var(--orange);
@@ -151,12 +160,13 @@ left: 100%;
 .product-card {
 position:relative; border-radius:22px; overflow:hidden; cursor:pointer;
 transition:all .4s cubic-bezier(.34,1.56,.64,1);
-border:2.5px solid rgba(255,255,255,0.1);
-background: linear-gradient(145deg, var(--surface), var(--surface2));
+border:3px solid var(--navy);
+background: linear-gradient(145deg, var(--surface), var(--white));
+box-shadow: 5px 5px 0 var(--navy);
 }
 .product-card:hover {
-transform:translateY(-14px) scale(1.02) rotate(0.5deg);
-box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 50px rgba(255,159,28,0.12);
+transform:translateY(-14px) scale(1.02) rotate(2deg);
+box-shadow: 8px 8px 0 var(--red), 0 20px 40px rgba(0,0,0,0.15);
 border-color: var(--orange);
 }
 .product-card:hover .product-brand-name {
@@ -285,26 +295,51 @@ animation: wiggle 0.4s ease;
 #form-success { display:none; color:var(--orange); font-size:.85rem; padding:.6rem 0; font-weight:700; }
 
 @media (max-width:900px) {
-  #about { grid-template-columns:1fr; }
-  .about-visual { display:none; }
-  .products-grid { grid-template-columns:1fr 1fr; }
-  .testi-grid { grid-template-columns:1fr; }
-  .gallery-grid { grid-template-columns:1fr 1fr; }
-  .gallery-item:nth-child(1) { grid-column:span 2; grid-row:span 1; }
-  .gallery-item:nth-child(4) { grid-column:span 1; }
-  .news-grid { grid-template-columns:1fr; }
-  .features-grid { grid-template-columns:1fr 1fr; }
-  #contact { grid-template-columns:1fr; gap:3rem; }
-  .form-row { grid-template-columns:1fr; }
-  .products-header { flex-direction:column; align-items:flex-start; }
+#about { grid-template-columns:1fr; }
+.about-visual { display:none; }
+.products-grid { grid-template-columns:1fr 1fr; }
+.testi-grid { grid-template-columns:1fr; }
+.gallery-grid { grid-template-columns:1fr 1fr; }
+.gallery-item:nth-child(1) { grid-column:span 2; grid-row:span 1; }
+.gallery-item:nth-child(4) { grid-column:span 1; }
+.news-grid { grid-template-columns:1fr; }
+.features-grid { grid-template-columns:1fr 1fr; }
+#contact { grid-template-columns:1fr; gap:3rem; }
+.form-row { grid-template-columns:1fr; }
+.products-header { flex-direction:column; align-items:flex-start; }
+/* Mobile jungle adjustments */
+#hero { min-height: auto; padding: 8rem 1.5rem 4rem; }
+.hero-content { padding: 0; max-width: 100%; }
+.hero-h1 { font-size: clamp(2.5rem, 12vw, 4rem); transform: rotate(-1deg); }
+.hero-eyebrow { font-size: 0.65rem; padding: 0.4rem 0.8rem; }
+.brands-strip { padding: 2rem 1.5rem; }
+.brand-logo-pill { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
 }
 @media (max-width:600px) {
-  .products-grid { grid-template-columns:1fr; }
-  .features-grid { grid-template-columns:1fr; }
-  .stats-row { grid-template-columns:1fr 1fr; }
-  .gallery-grid { grid-template-columns:1fr; }
-  .gallery-item:nth-child(1) { grid-column:span 1; }
-  .gallery-item:nth-child(4) { grid-column:span 1; }
+.products-grid { grid-template-columns:1fr; }
+.features-grid { grid-template-columns:1fr; }
+.stats-row { grid-template-columns:1fr 1fr; }
+.gallery-grid { grid-template-columns:1fr; }
+.gallery-item:nth-child(1) { grid-column:span 1; }
+.gallery-item:nth-child(4) { grid-column:span 1; }
+/* Mobile hero adjustments */
+#hero { padding: 7rem 1rem 3rem; }
+.hero-h1 { transform: rotate(0deg); font-size: clamp(2rem, 14vw, 3.5rem); }
+.hero-actions { flex-direction: column; gap: 0.8rem; }
+.hero-actions a { width: 100%; text-align: center; }
+.hero-sub { font-size: 0.95rem; }
+.brands-logos { gap: 1rem; }
+.brand-logo-pill { padding: 0.5rem 1rem; font-size: 0.85rem; }
+/* Product cards on mobile */
+.product-card { margin: 0 -0.5rem; }
+/* Contact form */
+#contact { padding: 4rem 1rem; }
+.form-group input, .form-group textarea, .form-group select { font-size: 16px; /* Prevent iOS zoom */ }
+}
+@media (max-width:400px) {
+.hero-h1 { font-size: 2.2rem; }
+.hero-eyebrow { font-size: 0.6rem; letter-spacing: 0.15em; }
+.brand-logo-pill { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
 }
 </style>
 </head>
@@ -351,8 +386,17 @@ animation: wiggle 0.4s ease;
 
 <!-- HERO -->
 <section id="hero">
-  <canvas id="hero-canvas"></canvas>
-  <div class="hero-overlay"></div>
+<div class="vine vine-left"></div>
+<div class="vine vine-right"></div>
+<div class="falling-leaves">
+<div class="leaf leaf-1"></div>
+<div class="leaf leaf-2"></div>
+<div class="leaf leaf-3"></div>
+<div class="leaf leaf-4"></div>
+<div class="leaf leaf-5"></div>
+</div>
+<canvas id="hero-canvas"></canvas>
+<div class="hero-overlay"></div>
   <div class="hero-content">
     <span class="hero-eyebrow">South Africa's #grabaflavour Wholesale Leader</span>
     <h1 class="hero-h1">
@@ -857,14 +901,19 @@ function closeMobile(){ham.classList.remove('open');mob.classList.remove('open')
 
 // ── BRAND COLORS ──
 const BRANDS = {
-  maties:      { c1:0xE6C800, c2:0xFFFFFF, c3:0xC8AA00, label:'MATIES',      top:0xFFFFFF },
-  snackhaven:  { c1:0xCC2929, c2:0xFFD700, c3:0xAA1818, label:'SNACK HAVEN', top:0xFFD700 },
-  bigloaf:     { c1:0x00AECC, c2:0xF4A21C, c3:0x008FA8, label:'BIG LOAF',    top:0xF4A21C },
-  crispycut:   { c1:0x0099BB, c2:0xFFFFFF, c3:0x007A99, label:'CRISPY CUT',  top:0xFFFFFF },
-  cornsnacker: { c1:0x3D1F00, c2:0xF4A21C, c3:0x2A1500, label:'CORN SNK',    top:0xF4A21C },
-  juniorsnacker:{ c1:0xE8631A, c2:0xFFD700, c3:0xC04E10, label:'JUNIOR',     top:0xFFD700 },
-  crackasnack: { c1:0x4C9A2A, c2:0xFFD700, c3:0x3A7A1E, label:'CRACK-A',     top:0xFFD700 },
+maties: { c1:0xFFD500, c2:0xFFFFFF, c3:0xE6C800, label:'MATIES', top:0xFFFFFF },
+snackhaven: { c1:0xE63946, c2:0xFFD500, c3:0xCC2929, label:'SNACK HAVEN', top:0xFFD500 },
+bigloaf: { c1:0x00BFA5, c2:0xFF9800, c3:0x008F7A, label:'BIG LOAF', top:0xFF9800 },
+crispycut: { c1:0x0099BB, c2:0xFFFFFF, c3:0x007A99, label:'CRISPY CUT', top:0xFFFFFF },
+cornsnacker: { c1:0x3D1F00, c2:0xFF9800, c3:0x2A1500, label:'CORN SNK', top:0xFF9800 },
+juniorsnacker:{ c1:0xFF9800, c2:0xFFD500, c3:0xF57C00, label:'JUNIOR', top:0xFFD500 },
+crackasnack: { c1:0x4CAF50, c2:0xFFD500, c3:0x3A7A1E, label:'CRACK-A', top:0xFFD500 },
 };
+
+// Jungle sunlight lighting
+const ambientLight = new THREE.AmbientLight(0xfff5e6, 0.8);
+const sunLight = new THREE.DirectionalLight(0xffffff, 1.2);
+sunLight.position.set(5, 10, 7);
 
 function makeBagGroup(THREE, brandKey, scale=1) {
   const b = BRANDS[brandKey] || BRANDS.maties;
